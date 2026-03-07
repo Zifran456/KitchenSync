@@ -48,6 +48,6 @@ Our main audience includes:
 
 # Project Status 🟡
 
-Initialization Phase  
+We are officially in the Construction Phase, working towards building our code and system architecture.
 
-![InitializingSativaGIF](https://github.com/user-attachments/assets/5187c9d6-9ab8-4c3c-9f92-67c9ae0d3246)
+https://github.com/user-attachments/assets/45e9a524-b90a-4aa8-9f94-680e15368863
