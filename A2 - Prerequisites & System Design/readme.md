@@ -1,10 +1,25 @@
 # Project Prerequisites and System Design
     This repository contains our ideas and documents used in envisioning the plan for our project.
     
-This repository Contains 3 folders which are:
+This folder contains the following 3 subfolders:  
 
-1.) GUI prototypes which contains our usability questionaitires from our high fidelity prototypes exploration and also our high fidelity and low fidelity prototypes
+## GUI Prototypes Folder
+Contains: 
+- Hi-Fi Prototype Folder
+   - Usability questionaitires from the high fidelity prototypes exploration
+   - Link to High Fidelity Figma Prototype  
+   - .fig and .pdf versions of Figma Prototype
+   - Prototype Walkthrough Video
+- Lo-Fi Prototypes 
 
-2.) Project Management Docs folder which contains all documents used in this project execution stage
+## Project Management Docs Folder
+ - Project Scrum/Report-Out
+ - DOCX Versions and PDF Versions of the following documents:
+    - Project Requirements
+    - Project Roles and Responsibilities
+    - Project Scope Statement
+    - RACI Chart
+    - Stakeholder Register and Engagement Plan
 
-3.) Our UMl Diagrams for our project
+  ## UML Diagrams Folder
+- DOCX Versions and PDF Versions of Group I's Data Flow Diagram
