@@ -85,41 +85,41 @@ document.addEventListener('DOMContentLoaded', function () {
   // ============================================
   // 4. ADD ITEM FORM SUBMISSION (Add Item page)
   // ============================================
-  var addItemForm = document.getElementById('addItemForm');
+  // var addItemForm = document.getElementById('addItemForm');
 
-  if (addItemForm) {
-    addItemForm.addEventListener('submit', function (event) {
-      event.preventDefault(); // Stop the form from actually submitting
+  // if (addItemForm) {
+  //   addItemForm.addEventListener('submit', function (event) {
+  //     event.preventDefault(); // Stop the form from actually submitting
 
-      var itemName = document.getElementById('itemName').value;
-      var quantity = document.getElementById('quantityValue').value;
-      var expiryDate = document.getElementById('expiryDate').value;
+  //     var itemName = document.getElementById('itemName').value;
+  //     var quantity = document.getElementById('quantityValue').value;
+  //     var expiryDate = document.getElementById('expiryDate').value;
 
-      // Find which storage location is selected
-      var selectedStorage = 'None';
-      assignBtns.forEach(function (btn) {
-        if (btn.classList.contains('active')) {
-          selectedStorage = btn.textContent;
-        }
-      });
+  //     // Find which storage location is selected
+  //     var selectedStorage = 'None';
+  //     assignBtns.forEach(function (btn) {
+  //       if (btn.classList.contains('active')) {
+  //         selectedStorage = btn.textContent;
+  //       }
+  //     });
 
-      // For now, just show an alert. Later this will connect to the backend.
-      alert(
-        'Item Added!\n\n' +
-        'Name: ' + itemName + '\n' +
-        'Quantity: ' + quantity + '\n' +
-        'Storage: ' + selectedStorage + '\n' +
-        'Expiry Date: ' + expiryDate
-      );
+  //     // For now, just show an alert. Later this will connect to the backend.
+  //     alert(
+  //       'Item Added!\n\n' +
+  //       'Name: ' + itemName + '\n' +
+  //       'Quantity: ' + quantity + '\n' +
+  //       'Storage: ' + selectedStorage + '\n' +
+  //       'Expiry Date: ' + expiryDate
+  //     );
 
-      // Reset the form
-      addItemForm.reset();
-      document.getElementById('quantityValue').value = '1';
-      assignBtns.forEach(function (b) {
-        b.classList.remove('active');
-      });
-    });
-  }
+  //     // Reset the form
+  //     addItemForm.reset();
+  //     document.getElementById('quantityValue').value = '1';
+  //     assignBtns.forEach(function (b) {
+  //       b.classList.remove('active');
+  //     });
+  //   });
+  // }
 
   // ============================================
   // 5. SEARCH FILTERING (Storage & Recipe pages)
@@ -187,3 +187,152 @@ if (document.getElementById("recipeSuggestionsGrid")) {
     })
     .catch(err => console.error("Recipe error:", err));
 }
+
+// const assignBtns = document.querySelectorAll(".assign-btn");
+// const storageInput = document.getElementById("storageValue");
+// const itemNameInput = document.getElementById("itemName");
+// const imagePreview = document.getElementById("imagePreview");
+// const imageUrlInput = document.getElementById("imageUrl");
+// assignBtns.forEach(btn => {
+//   btn.addEventListener("click", () => {
+//     storageInput.value = btn.textContent.toLowerCase();
+//   });
+// });
+
+
+// if (itemNameInput && imagePreview && imageUrlInput) {
+//   let imageSearchTimeout;
+
+//   itemNameInput.addEventListener("input", function () {
+//     const itemName = this.value.trim();
+
+//     clearTimeout(imageSearchTimeout);
+
+//     if (!itemName) {
+//       imagePreview.innerHTML = `<i class="bi bi-image"></i>`;
+//       imageUrlInput.value = "";
+//       return;
+//     }
+
+//     imageSearchTimeout = setTimeout(() => {
+//       const imageUrl = `https://source.unsplash.com/400x300/?${encodeURIComponent(itemName)},food`;
+
+//       imagePreview.innerHTML = `
+//         <img 
+//           src="${imageUrl}" 
+//           alt="${itemName}" 
+//           style="width:100%; height:100%; object-fit:cover; border-radius:12px;"
+//         >
+//       `;
+
+//       imageUrlInput.value = imageUrl;
+//     }, 500);
+//   });
+// }
+
+const itemNameInput = document.getElementById("itemName");
+const imagePreview = document.getElementById("imagePreview");
+const imageUrlInput = document.getElementById("imageUrl");
+const assignBtns = document.querySelectorAll(".assign-btn");
+const storageInput = document.getElementById("storageValue");
+
+if (assignBtns.length && storageInput) {
+  assignBtns.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      assignBtns.forEach(function (b) {
+        b.classList.remove("active");
+      });
+
+      this.classList.add("active");
+      storageInput.value = this.textContent.trim().toLowerCase();
+    });
+  });
+}
+
+if (itemNameInput && imagePreview && imageUrlInput) {
+  let imageTimer;
+
+  itemNameInput.addEventListener("input", function () {
+    const itemName = this.value.trim();
+
+    clearTimeout(imageTimer);
+
+    if (!itemName) {
+      imagePreview.innerHTML = `<i class="bi bi-image"></i>`;
+      imageUrlInput.value = "";
+      return;
+    }
+
+    imageTimer = setTimeout(() => {
+
+      const imageUrl = `https://www.themealdb.com/images/ingredients/${encodeURIComponent(itemName.toLowerCase())}.png`;
+      
+      imagePreview.innerHTML = `
+<img 
+  src="${imageUrl}"
+  style="width:100%; height:100%; object-fit:cover; border-radius:12px;"
+  onerror="this.style.border='3px solid red'"
+>
+`;
+
+      imageUrlInput.value = imageUrl;
+
+      // imagePreview.innerHTML = `
+      //   <img 
+      //     src="${imageUrl}" 
+      //     alt=""
+      //     style="width:100%; height:100%; object-fit:cover; border-radius:12px;"
+      //   >
+      // `;
+    }, 300);
+  });
+}
+
+// Store selected storage in hidden input
+if (assignBtns.length && storageInput) {
+  assignBtns.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      assignBtns.forEach(function (b) {
+        b.classList.remove("active");
+      });
+
+      this.classList.add("active");
+      storageInput.value = this.textContent.trim().toLowerCase();
+    });
+  });
+}
+document.addEventListener("DOMContentLoaded", function () {
+  const recipeGrid = document.getElementById("recipeSuggestionsGrid");
+
+  if (!recipeGrid) return;
+
+  fetch("/api/recipes/expiring-soon")
+    .then(res => res.json())
+    .then(meals => {
+      recipeGrid.innerHTML = "";
+
+      if (!meals || meals.length === 0) {
+        recipeGrid.innerHTML = "<p>No recipe suggestions right now.</p>";
+        return;
+      }
+
+      meals.slice(0, 3).forEach(meal => {
+        recipeGrid.innerHTML += `
+          <div class="recipe-thumb" style="min-width:120px;">
+            <img 
+              src="${meal.strMealThumb}" 
+              alt="${meal.strMeal}"
+              style="width:100%; height:100px; object-fit:cover; border-radius:12px;"
+            >
+            <div style="margin-top:6px; font-size:0.85rem; text-align:center;">
+              ${meal.strMeal}
+            </div>
+          </div>
+        `;
+      });
+    })
+    .catch(err => {
+      console.error("Recipe error:", err);
+      recipeGrid.innerHTML = "<p>Could not load recipes.</p>";
+    });
+});

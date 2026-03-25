@@ -26,11 +26,11 @@
 
     <!-- ========== HEADER ========== -->
     <div class="inner-header">
-      <a href="dashboard.html" class="back-link">
+      <a href="/dashboard" class="back-link">
         <i class="bi bi-arrow-left"></i> Back
       </a>
       <span class="inner-title">Pantry</span>
-      <a href="dashboard.html" class="home-link">
+      <a href="/dashboard" class="home-link">
         <i class="bi bi-house-fill"></i>
       </a>
     </div>
@@ -56,20 +56,44 @@
           <i class="bi bi-search"></i>
         </span>
       </div>
-      <a href="add-item.html" class="add-item-btn">
+      <a href="/add-item" class="add-item-btn">
         <i class="bi bi-plus-lg"></i>
       </a>
     </div>
 
     <!-- ========== ITEMS LIST (empty for now) ========== -->
-    <div id="pantryItems">
-      <div class="empty-state">
-        <i class="bi bi-grid-3x3-gap" style="font-size:3rem; margin-bottom:0.5rem;"></i>
-        <p>No items in your pantry yet.</p>
-        <a href="add-item.html" style="color: var(--blue-link);">Add your first item</a>
-      </div>
-    </div>
+     <div id="pantryItems">
+      <% if (!foods || foods.length === 0) { %>
+        <div class="empty-state">
+          <i class="bi bi-grid-3x3-gap" style="font-size:3rem; margin-bottom:0.5rem;"></i>
+          <p>No items in your pantry yet.</p>
+          <a href="/add-item" style="color: var(--blue-link);">Add your first item</a>
+        </div>
+      <% } else { %>
+        <div class="items-grid">
+          <% foods.forEach(food => { %>
+            <div class="item-card searchable-item">
+              <div class="item-image">
+                <% if (food.imageUrl) { %>
+                  <img src="<%= food.imageUrl %>" alt="<%= food.name %>" style="width:100%; height:100%; object-fit:cover; border-radius:12px;">
+                <% } else { %>
+                  <i class="bi bi-image" style="font-size:1.5rem; color:#CCC;"></i>
+                <% } %>
+              </div>
 
+              <div class="item-info">
+                <div class="item-name"><%= food.name %></div>
+                <div class="item-quantity">Qty: <%= food.quantity %></div>
+              </div>
+
+              <div class="item-time">
+                <%= new Date(food.expiryDate).toLocaleDateString() %>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
   </div>
   <!-- End Page Wrapper -->
 

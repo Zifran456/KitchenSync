@@ -19,6 +19,8 @@
 
   <!-- Our Custom CSS -->
   <link href="css/style.css" rel="stylesheet">
+
+
 </head>
 <body>
 
@@ -29,7 +31,7 @@
 
       <!-- Left side: Logo + Avatar + Username -->
       <div class="top-nav-left">
-        <a href="dashboard.html" class="ks-logo" style="font-size:1.4rem;">KS</a>
+        <a href="/dashboard" class="ks-logo" style="font-size:1.4rem;">KS</a>
         <div class="user-avatar">
           <i class="bi bi-person-fill" style="font-size:1.4rem; color:#999;"></i>
         </div>
@@ -38,10 +40,10 @@
 
       <!-- Right side: Add + Favorites + Notifications -->
       <div class="top-nav-right">
-        <a href="add-item.html" class="icon-btn" title="Add Item">
+        <a href="/add-item" class="icon-btn" title="Add Item">
           <i class="bi bi-plus-lg"></i>
         </a>
-        <a href="liked-recipes.html" class="icon-btn" title="Liked Recipes">
+        <a href="/liked-recipes" class="icon-btn" title="Liked Recipes">
           <i class="bi bi-suit-heart-fill"></i>
         </a>
         <a href="#" class="icon-btn notification-badge" title="Notifications">
@@ -98,6 +100,33 @@
       </div>
     </div>
     <!-- End Overview Card -->
+      <div class="storage-section">
+      <h4>Storages</h4>
+      <div class="storage-grid">
+
+        <a href="/fridge" class="storage-item">
+          <div class="storage-icon">
+            <i class="bi bi-box-seam"></i>
+          </div>
+          <span class="storage-label">Fridge</span>
+        </a>
+
+        <a href="/pantry" class="storage-item">
+          <div class="storage-icon">
+            <i class="bi bi-grid-3x3-gap"></i>
+          </div>
+          <span class="storage-label">Pantry</span>
+        </a>
+
+        <a href="/freezer" class="storage-item">
+          <div class="storage-icon">
+            <i class="bi bi-snow"></i>
+          </div>
+          <span class="storage-label">Freezer</span>
+        </a>
+
+      </div>
+    </div>
 
 
     <!-- ========== FILTER TABS ========== -->
@@ -189,166 +218,244 @@
     <!-- End ALL Section -->
 
 
-    <!-- EXPIRED items -->
-    <div class="items-section filter-content" data-content="expired" style="display: none;">
-      <h4>Expired</h4>
-      <div class="items-grid">
+    <div class="items-section filter-content" data-content="all" style="display: block;">
+  <h4>All</h4>
+  <div class="items-grid">
 
-        <div class="item-card border-red">
-          <div class="item-image">
+    <% if (foods.length === 0) { %>
+      <p>No items found.</p>
+    <% } %>
+
+    <% foods.forEach((food, index) => { %>
+      <div class="item-card all-item-card <%= index >= 4 ? 'extra-item d-none' : '' %>">
+        <div class="item-image">
+          <% if (food.imageUrl) { %>
+            <img src="<%= food.imageUrl %>" alt="<%= food.name %>" style="width:100%; height:100%; object-fit:cover; border-radius:12px;">
+          <% } else { %>
             <i class="bi bi-image" style="font-size:1.5rem; color:#CCC;"></i>
-          </div>
-          <div class="item-info">
-            <div class="item-name">Rice</div>
-          </div>
-          <div class="item-time">4 days ago</div>
+          <% } %>
         </div>
 
-        <div class="item-card border-red">
-          <div class="item-image">
-            <i class="bi bi-image" style="font-size:1.5rem; color:#CCC;"></i>
-          </div>
-          <div class="item-info">
-            <div class="item-name">Bananas</div>
-          </div>
-          <div class="item-time">3 days ago</div>
+        <div class="item-info">
+          <div class="item-name"><%= food.name %></div>
         </div>
 
-        <div class="item-card border-red">
-          <div class="item-image">
-            <i class="bi bi-image" style="font-size:1.5rem; color:#CCC;"></i>
-          </div>
-          <div class="item-info">
-            <div class="item-name">Kale</div>
-          </div>
-          <div class="item-time">2 days ago</div>
+        <div class="item-time">
+          <%= new Date(food.expiryDate).toLocaleDateString() %>
         </div>
 
+        <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;">
+          <span>Qty: <%= food.quantity %></span>
+          <!-- Remove quantity -->
+          <form action="/decrease-quantity" method="POST">
+            <input type="hidden" name="foodId" value="<%= food._id %>">
+            <button type="submit" class="btn btn-sm btn-warning"><i class="bi bi-arrow-down"></i></button>
+          </form>
+
+          <!-- Remove item -->
+          <form action="/delete-item" method="POST">
+            <input type="hidden" name="foodId" value="<%= food._id %>">
+            <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+          </form>
+
+        </div>
       </div>
+    <% }) %>
+
+  </div>
+
+  <% if (foods.length > 4) { %>
+    <div style="margin-top:12px;">
+      <button id="toggleAllItemsBtn" class="btn btn-sm btn-outline-secondary" type="button">
+        Show More
+      </button>
     </div>
+  <% } %>
+</div>
+    
+    <!-- EXPIRED items -->
+   <div class="items-section filter-content" data-content="expired" style="display: none;">
+  <h4>Expired</h4>
+  <div class="items-grid">
+
+    <% let hasExpired = false; %>
+
+    <% foods.forEach(food => { %>
+      <% if (new Date(food.expiryDate) < new Date()) { %>
+        <% hasExpired = true; %>
+
+        <div class="item-card border-red">
+          <div class="item-image">
+            <% if (food.imageUrl) { %>
+              <img src="<%= food.imageUrl %>" alt="<%= food.name %>" style="width:100%; height:100%; object-fit:cover; border-radius:12px;">
+            <% } else { %>
+              <i class="bi bi-image" style="font-size:1.5rem; color:#CCC;"></i>
+            <% } %>
+          </div>
+
+          <div class="item-info">
+            <div class="item-name"><%= food.name %></div>
+          </div>
+
+          <div class="item-time">
+            <%= new Date(food.expiryDate).toLocaleDateString() %>
+          </div>
+
+          <form action="/delete-item" method="POST" style="margin-top:8px;">
+            <input type="hidden" name="foodId" value="<%= food._id %>">
+            <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+          </form>
+        </div>
+
+      <% } %>
+    <% }) %>
+
+    <% if (!hasExpired) { %>
+      <p>No expired items.</p>
+    <% } %>
+
+  </div>
+</div>
     <!-- End EXPIRED Section -->
 
 
-    <!-- EXPIRING SOON items -->
     <div class="items-section filter-content" data-content="expiring" style="display: none;">
-      <h4>Expiring Soon</h4>
-      <div class="items-grid">
+  <h4>Expiring Soon</h4>
+  <div class="items-grid">
+
+    <% 
+      let hasExpiring = false;
+      const today = new Date();
+      const soon = new Date();
+      soon.setDate(today.getDate() + 3);
+    %>
+
+    <% foods.forEach(food => { %>
+      <% const expiry = new Date(food.expiryDate); %>
+
+      <% if (expiry >= today && expiry <= soon) { %>
+        <% hasExpiring = true; %>
 
         <div class="item-card border-orange">
           <div class="item-image">
-            <i class="bi bi-image" style="font-size:1.5rem; color:#CCC;"></i>
+            <% if (food.imageUrl) { %>
+              <img src="<%= food.imageUrl %>" alt="<%= food.name %>" style="width:100%; height:100%; object-fit:cover; border-radius:12px;">
+            <% } else { %>
+              <i class="bi bi-image" style="font-size:1.5rem; color:#CCC;"></i>
+            <% } %>
           </div>
+
           <div class="item-info">
-            <div class="item-name">Rice</div>
+            <div class="item-name"><%= food.name %></div>
           </div>
-          <div class="item-time">1 week</div>
+
+          <div class="item-time">
+            <%= expiry.toLocaleDateString() %>
+          </div>
+
+          <form action="/delete-item" method="POST" style="margin-top:8px;">
+            <input type="hidden" name="foodId" value="<%= food._id %>">
+            <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+          </form>
         </div>
 
-        <div class="item-card border-orange">
-          <div class="item-image">
-            <i class="bi bi-image" style="font-size:1.5rem; color:#CCC;"></i>
-          </div>
-          <div class="item-info">
-            <div class="item-name">Bananas</div>
-          </div>
-          <div class="item-time">3 days</div>
-        </div>
+      <% } %>
+    <% }) %>
 
-        <div class="item-card border-orange">
-          <div class="item-image">
-            <i class="bi bi-image" style="font-size:1.5rem; color:#CCC;"></i>
-          </div>
-          <div class="item-info">
-            <div class="item-name">Kale</div>
-          </div>
-          <div class="item-time">2 days</div>
-        </div>
+    <% if (!hasExpiring) { %>
+      <p>No expiring soon items.</p>
+    <% } %>
 
-      </div>
-    </div>
+  </div>
+</div>
     <!-- End EXPIRING SOON Section -->
 
 
     <!-- LOW STOCK items -->
     <div class="items-section filter-content" data-content="low-stock" style="display: none;">
-      <h4>Low Stock</h4>
-      <div class="items-grid">
+  <h4>Low Stock</h4>
+  <div class="items-grid">
+
+    <% let hasLowStock = false; %>
+
+    <% foods.forEach(food => { %>
+      <% if (food.quantity <= 1) { %>
+        <% hasLowStock = true; %>
 
         <div class="item-card border-orange">
           <div class="item-image">
-            <i class="bi bi-image" style="font-size:1.5rem; color:#CCC;"></i>
+            <% if (food.imageUrl) { %>
+              <img src="<%= food.imageUrl %>" alt="<%= food.name %>" style="width:100%; height:100%; object-fit:cover; border-radius:12px;">
+            <% } else { %>
+              <i class="bi bi-image" style="font-size:1.5rem; color:#CCC;"></i>
+            <% } %>
           </div>
+
           <div class="item-info">
-            <div class="item-name">Rice</div>
+            <div class="item-name"><%= food.name %></div>
           </div>
-          <div class="item-time">4 days ago</div>
+
+          <div class="item-time">
+            Qty: <%= food.quantity %>
+          </div>
+
+          <form action="/delete-item" method="POST" style="margin-top:8px;">
+            <input type="hidden" name="foodId" value="<%= food._id %>">
+            <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+          </form>
         </div>
 
-        <div class="item-card border-orange">
-          <div class="item-image">
-            <i class="bi bi-image" style="font-size:1.5rem; color:#CCC;"></i>
-          </div>
-          <div class="item-info">
-            <div class="item-name">Bananas</div>
-          </div>
-          <div class="item-time">3 days ago</div>
-        </div>
+      <% } %>
+    <% }) %>
 
-      </div>
-    </div>
+    <% if (!hasLowStock) { %>
+      <p>No low stock items.</p>
+    <% } %>
+
+  </div>
+</div>
     <!-- End LOW STOCK Section -->
 
 
     <!-- ========== RECIPE SUGGESTIONS (Horizontal Scroll) ========== -->
     <div class="recipe-suggestions">
-      <h4>Recipe Suggestions</h4>
-      <div style="display:flex; align-items:center;">
-        <div class="recipe-scroll" style="flex:1;">
-
-          <div class="recipe-thumb">
-            <i class="bi bi-image" style="font-size:2rem; color:#CCC;"></i>
-          </div>
-
-          <div class="recipe-thumb">
-            <i class="bi bi-image" style="font-size:2rem; color:#CCC;"></i>
-          </div>
-
-          <div class="recipe-thumb">
-            <i class="bi bi-image" style="font-size:2rem; color:#CCC;"></i>
-          </div>
-
-        </div>
-        <div class="load-more-arrow">
-          <a href="recipes.html">
-            <i class="bi bi-arrow-right" style="font-size:1.5rem;"></i><br>
-            <small>Load more</small>
-          </a>
-        </div>
-      </div>
+  <h4>Recipe Suggestions</h4>
+  <div style="display:flex; align-items:center;">
+    <div class="recipe-scroll" id="recipeSuggestionsGrid" style="flex:1;">
+      <p>Loading recipes...</p>
     </div>
+
+    <div class="load-more-arrow">
+      <a href="/recipes">
+        <i class="bi bi-arrow-right" style="font-size:1.5rem;"></i><br>
+        <small>Load more</small>
+      </a>
+    </div>
+  </div>
+</div>
     <!-- End Recipe Suggestions -->
 
 
     <!-- ========== STORAGE SECTION ========== -->
-    <div class="storage-section">
+    <!-- <div class="storage-section">
       <h4>Storages</h4>
       <div class="storage-grid">
 
-        <a href="fridge.html" class="storage-item">
+        <a href="/fridge" class="storage-item">
           <div class="storage-icon">
             <i class="bi bi-box-seam"></i>
           </div>
           <span class="storage-label">Fridge</span>
         </a>
 
-        <a href="pantry.html" class="storage-item">
+        <a href="/pantry" class="storage-item">
           <div class="storage-icon">
             <i class="bi bi-grid-3x3-gap"></i>
           </div>
           <span class="storage-label">Pantry</span>
         </a>
 
-        <a href="freezer.html" class="storage-item">
+        <a href="/freezer" class="storage-item">
           <div class="storage-icon">
             <i class="bi bi-snow"></i>
           </div>
@@ -363,7 +470,7 @@
         </a>
 
       </div>
-    </div>
+    </div> -->
     <!-- End Storage Section -->
 
   </div>
@@ -437,12 +544,36 @@
   <!-- End Add Storage Modal -->
 
   <!-- Bootstrap 5 JS -->
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const toggleBtn = document.getElementById("toggleAllItemsBtn");
+    const extraItems = document.querySelectorAll(".all-item-card.extra-item");
+
+    if (!toggleBtn) return;
+
+    let expanded = false;
+
+    toggleBtn.addEventListener("click", function () {
+      expanded = !expanded;
+
+      extraItems.forEach(item => {
+        if (expanded) {
+          item.classList.remove("d-none");
+        } else {
+          item.classList.add("d-none");
+        }
+      });
+
+      toggleBtn.textContent = expanded ? "Show Less" : "Show More";
+    });
+  });
+</script>
   <!-- Our Custom JS -->
-  <script src="js/app.js"></script>
+  <script src="/js/app.js"></script>
+  
+
 
 </body>
 </html>

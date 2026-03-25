@@ -3,13 +3,13 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose").default;
-console.log("passportLocalMongoose:", passportLocalMongoose);
-console.log("type:", typeof passportLocalMongoose);
 const app = express();
 const port = 3000;
 require("dotenv").config(); 
+app.set("view engine", "ejs");
+app.use("/css", express.static("css"));
+app.use("/js", express.static("js"));
 
-app.use(express.static(__dirname));
 
 
 app.use(express.urlencoded({ extended: true }));
@@ -52,16 +52,25 @@ passport.deserializeUser(User.deserializeUser());
 
 
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/login.html");
+  res.render("login");
 });
 
 
 app.post("/loginForm",
   passport.authenticate("local", {
-    successRedirect: "/dashboard.html",
+    successRedirect: "/dashboard",
     failureRedirect: "/"
   })
 );
+
+app.get("/add-item", (req, res) => {
+  res.render("add-item");
+});
+
+app.get("/liked-recipes", (req, res) => {
+  res.render("liked-recipes");
+});
+
 
 
 app.post("/register", async (req, res) => {
@@ -77,12 +86,52 @@ app.post("/register", async (req, res) => {
     await User.register( user, req.body.password); 
 
    req.login(user, (err) => {
-     if (err) return res.redirect("/");
-     res.sendFile(__dirname + "/dashboard.html");
-   });
+  if (err) return res.redirect("/");
+  res.redirect("/dashboard");
+});
   }
 
 });
+
+
+
+app.get("/dashboard", async (req, res) => {
+  if (!req.isAuthenticated()) {
+    return res.redirect("/");
+  }
+
+  try {
+    const foods = await Food.find({}); // get foods from database
+
+    res.render("dashboard", {
+      username: req.user.username,
+      foods: foods
+    });
+
+  } catch (err) {
+    console.log(err);
+    res.send("Error loading dashboard");
+  }
+});
+
+app.post("/addItemForm", async (req, res) => {
+  try {
+    const food = new Food({
+      name: req.body.name,
+      quantity: req.body.quantity,
+      expiryDate: req.body.expiryDate,
+      storage: req.body.storage,
+      imageUrl: req.body.imageUrl
+    });
+
+    await food.save();
+    res.redirect("/dashboard");
+  } catch (err) {
+    console.log(err);
+    res.redirect("/add-item");
+  }
+});
+
 app.get("/dashboard-summary", async (req, res) => {
   try {
     const foods = await Food.find();
@@ -157,6 +206,93 @@ app.get("/api/recipes/expiring-soon", async (req, res) => {
     res.json(data.meals || []);
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+});
+app.post("/delete-item", async (req, res) => {
+  if (!req.isAuthenticated()) {
+    return res.redirect("/");
+  }
+
+  try {
+    const foodId = req.body.foodId;
+
+    await Food.findByIdAndDelete(foodId);
+
+    res.redirect("/dashboard");
+  } catch (err) {
+    console.log(err);
+    res.send("Error deleting item");
+  }
+});
+app.post("/decrease-quantity", async (req, res) => {
+  if (!req.isAuthenticated()) {
+    return res.redirect("/");
+  }
+
+  try {
+    const food = await Food.findById(req.body.foodId);
+
+    if (!food) {
+      return res.redirect("/dashboard");
+    }
+
+    food.quantity = food.quantity - 1;
+
+    if (food.quantity <= 0) {
+      await Food.findByIdAndDelete(req.body.foodId);
+    } else {
+      await food.save();
+    }
+
+    res.redirect("/dashboard");
+  } catch (err) {
+    console.log(err);
+    res.send("Error updating quantity");
+  }
+});
+
+app.get("/freezer", async (req, res) => {
+  if (!req.isAuthenticated()) {
+    return res.redirect("/");
+  }
+
+  try {
+    const freezerFoods = await Food.find({ storage: "freezer" });
+
+    res.render("freezer", {
+      foods: freezerFoods
+    });
+  } catch (err) {
+    console.log(err);
+    res.send("Error loading freezer");
+  }
+});
+app.get("/fridge", async (req, res) => {
+  if (!req.isAuthenticated()) {
+    return res.redirect("/");
+  }
+
+  try {
+    const foods = await Food.find({ storage: "fridge" });
+
+    res.render("fridge", { foods });
+  } catch (err) {
+    console.log(err);
+    res.send("Error loading fridge");
+  }
+});
+
+app.get("/pantry", async (req, res) => {
+  if (!req.isAuthenticated()) {
+    return res.redirect("/");
+  }
+
+  try {
+    const foods = await Food.find({ storage: "pantry" });
+    res.render("pantry", { foods });
+  } catch (err) {
+    console.log(err);
+    res.send("Error loading pantry");
   }
 });
 

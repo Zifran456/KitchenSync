@@ -26,11 +26,11 @@
 
     <!-- ========== HEADER ========== -->
     <div class="inner-header">
-      <a href="dashboard.html" class="back-link">
+      <a href="/dashboard" class="back-link">
         <i class="bi bi-arrow-left"></i> Back
       </a>
       <span></span>
-      <a href="dashboard.html" class="home-link">
+      <a href="/dashboard" class="home-link">
         <i class="bi bi-house-fill"></i>
       </a>
     </div>
@@ -39,17 +39,18 @@
     <div class="add-item-page">
       <h3>Add New</h3>
 
-      <form id="addItemForm">
+      <form id="addItemForm" action="/addItemForm" method="POST">
 
         <!-- Image Placeholder -->
-        <div class="image-placeholder">
-          <i class="bi bi-image"></i>
-        </div>
-
+        <div class="image-placeholder" id="imagePreview">
+         <i class="bi bi-image"></i>
+      </div>
+<input type="hidden" name="imageUrl" id="imageUrl">
         <!-- Item Name -->
         <label for="itemName">Item Name</label>
         <input 
           type="text" 
+          name ="name"
           class="form-control" 
           id="itemName" 
           placeholder="Enter item name"
@@ -62,6 +63,7 @@
           <button type="button" class="quantity-btn" id="quantityMinus">&minus;</button>
           <input 
             type="text" 
+            name = "quantity"
             class="quantity-value" 
             id="quantityValue" 
             value="1" 
@@ -77,13 +79,14 @@
           <button type="button" class="assign-btn">Fridge</button>
           <button type="button" class="assign-btn">Freezer</button>
         </div>
-
+      <input type="hidden" name="storage" id="storageValue">
         <!-- Expiry Date -->
         <div class="mb-3">
           <input 
             type="date" 
             class="form-control" 
             id="expiryDate"
+            name="expiryDate"
             placeholder="Expiry Date"
             style="padding: 0.8rem;"
           >
@@ -103,8 +106,7 @@
   <!-- End Page Wrapper -->
 
   <!-- Bootstrap 5 JS -->
-  <script 
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
   </script>
 
   <!-- Our Custom JS -->
