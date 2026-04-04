@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  
+
 
   // ============================================
   // 5. SEARCH FILTERING (Storage & Recipe pages)
@@ -169,7 +169,7 @@ if (itemNameInput && imagePreview && imageUrlInput) {
     imageTimer = setTimeout(() => {
 
       const imageUrl = `https://www.themealdb.com/images/ingredients/${encodeURIComponent(itemName.toLowerCase())}.png`;
-      
+
       imagePreview.innerHTML = `
        <img src="${imageUrl}" style="width:100%; height:100%; object-fit:cover; border-radius:12px;" onerror="this.style.border='3px solid red'">`;
 
@@ -208,7 +208,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       meals.slice(0, 3).forEach(meal => {
-       recipeGrid.innerHTML += `
+        recipeGrid.innerHTML += `
     <a href="/recipe-suggestions" style="text-decoration:none; color:inherit;">
       <div class="recipe-thumb" style="min-width:120px;">
         <img 
@@ -220,7 +220,7 @@ document.addEventListener("DOMContentLoaded", function () {
       </div>
     </a>
   `;
-});
+      });
     })
     .catch(err => {
       console.error("Recipe error:", err);

@@ -4,9 +4,9 @@ const session = require("express-session"); //Decalred session to help remeber l
 const passport = require("passport"); // utilized passport for easy authentication
 const passportLocalMongoose = require("passport-local-mongoose").default; //
 const axios = require("axios");// Imported axios in other to utilize api
-const app = express(); 
+const app = express();
 const port = 3000;
-require("dotenv").config();  
+require("dotenv").config();
 app.set("view engine", "ejs"); // We utilized ejs because html is static 
 app.use("/css", express.static("css"));
 app.use("/js", express.static("js"));
@@ -16,52 +16,52 @@ app.use("/js", express.static("js"));
 app.use(express.urlencoded({ extended: true }));
 
 app.use(session({
-    secret: process.env.DB_SECRET,
-    resave: false,
-    saveUninitialized: false
+  secret: process.env.DB_SECRET,
+  resave: false,
+  saveUninitialized: false
 }));
 
 mongoose.connect("mongodb://127.0.0.1:27017/kitchensync").then(() => console.log("MongoDB connected"));
 
 const userSchema = new mongoose.Schema // Decalred user schema
-({
-  username: String,
- 
-});
+  ({
+    username: String,
+
+  });
 
 const foodSchema = new mongoose.Schema // Decalred food schema
-({
-  name:String,
-  quantity:Number,
-  expiryDate: Date, 
-  storage: {
-    type:String,
-    enum: ["pantry","fridge","freezer"]
-  },
-  imageUrl:String
+  ({
+    name: String,
+    quantity: Number,
+    expiryDate: Date,
+    storage: {
+      type: String,
+      enum: ["pantry", "fridge", "freezer"]
+    },
+    imageUrl: String
 
-});
+  });
 const recipeSchema = new mongoose.Schema // Declared recipe schema
-({
-  title: String,
-  image: String,
-  instructions: String,
-  ingredients: [String],
-  source: {
-    type: String,
-    enum: ["manual", "suggested"],
-    default: "manual"
-  },
-  username: String,
-  liked: {
-  type: Boolean,
-  default: false
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
-});
+  ({
+    title: String,
+    image: String,
+    instructions: String,
+    ingredients: [String],
+    source: {
+      type: String,
+      enum: ["manual", "suggested"],
+      default: "manual"
+    },
+    username: String,
+    liked: {
+      type: Boolean,
+      default: false
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now
+    }
+  });
 
 
 const Recipe = mongoose.model("Recipe", recipeSchema);
@@ -110,21 +110,21 @@ app.get("/add-recipe", (req, res) => {
 
 
 app.post("/register", async (req, res) => {
-  console.log( "User " + req.body.username + " is attempting to register" );
+  console.log("User " + req.body.username + " is attempting to register");
 
   const oldUser = await User.findOne({
     username: req.body.username
   });
-  if(oldUser){
+  if (oldUser) {
     return res.redirect("/");
-  }else{
-    const user = new User({username: req.body.username});
-    await User.register( user, req.body.password); 
+  } else {
+    const user = new User({ username: req.body.username });
+    await User.register(user, req.body.password);
 
-   req.login(user, (err) => {
-  if (err) return res.redirect("/");
-  res.redirect("/dashboard");
-});
+    req.login(user, (err) => {
+      if (err) return res.redirect("/");
+      res.redirect("/dashboard");
+    });
   }
 
 });
@@ -210,9 +210,9 @@ app.post("/add-recipe", async (req, res) => {
   try {
     const ingredientsArray = req.body.ingredients
       ? req.body.ingredients
-          .split("\n")
-          .map(item => item.trim())
-          .filter(item => item !== "")
+        .split("\n")
+        .map(item => item.trim())
+        .filter(item => item !== "")
       : [];
 
     const recipe = new Recipe({
