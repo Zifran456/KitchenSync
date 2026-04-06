@@ -57,6 +57,9 @@ MVP complete. Backend integrated with Express, MongoDB, and EJS views.
 > **Requires:** Node.js and a MongoDB instance (local or Atlas).
 
 ```bash
+# Move into the app folder first
+cd app
+
 # Install dependencies (first time only)
 npm install
 
