@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KitchenSync - Liked Recipes</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+
+  <div class="page-wrapper">
+
+    <div class="inner-header">
+      <a href="/dashboard" class="back-link"><i class="bi bi-arrow-left"></i> Back</a>
+      <span class="inner-title">Liked Recipes</span>
+      <a href="/dashboard" class="home-link"><i class="bi bi-house-fill"></i></a>
+    </div>
+
+    <% if (recipes.length === 0) { %>
+      <div class="empty-state" style="margin-top: 3rem; text-align: center;">
+        <i class="bi bi-heart" style="font-size:3rem; margin-bottom:0.5rem;"></i>
+        <p style="font-weight:600;">No liked recipes yet.</p>
+        <p style="font-size:0.9rem; color:#888; max-width:260px; margin:0 auto;">
+          Tap the heart on any recipe to save it here for easy access.
+        </p>
+        <a href="/recipes" style="color: var(--blue-link); margin-top:1rem; display:inline-block;">Browse recipes</a>
+      </div>
+    <% } else { %>
+
+      <!-- Search bar -->
+      <div class="search-bar" style="justify-content: flex-end;">
+        <div class="search-input-wrapper" style="width: 260px;">
+          <input type="text" placeholder="Search liked recipes" class="page-search-input"
+            data-target="#likedRecipeList"
+            style="width:100%; padding:0.7rem 2.5rem 0.7rem 1rem; border:1px solid var(--border-gray); border-radius:8px; font-size:0.9rem; background-color:var(--white);">
+          <span class="search-icon-inside"><i class="bi bi-search"></i></span>
+        </div>
+      </div>
+
+      <div id="likedRecipeList" style="padding: 0 1.7rem;">
+        <div class="recipe-grid">
+          <% recipes.forEach(function(recipe, idx) { %>
+            <div class="recipe-card searchable-item" style="position:relative;
+              <% if (recipe.hasExpiring) { %>border: 1.5px solid var(--orange-expiring);<% } %>">
+
+              <!-- Unlike button -->
+              <button class="like-btn liked"
+                data-recipe-id="<%= recipe._id %>"
+                title="Remove from liked"
+                style="position:absolute; top:0.5rem; right:0.5rem; background:none; border:none; cursor:pointer; font-size:1.2rem; z-index:2; color: var(--red-expired);">
+                <i class="bi bi-heart-fill"></i>
+              </button>
+
+              <div class="recipe-card-image" style="background: <%= recipe.hasExpiring ? '#FFF8EC' : '' %>;">
+                <i class="bi bi-image" style="font-size:2rem; color: <%= recipe.hasExpiring ? 'var(--orange-expiring)' : '#CCC' %>;"></i>
+              </div>
+
+              <div class="recipe-card-info">
+                <h5 style="margin:0.2rem 0 0.3rem; font-size:1rem;"><%= recipe.name %></h5>
+                <p style="font-size:0.8rem; color:#666; margin-bottom:0.4rem; line-height:1.4;"><%= recipe.description %></p>
+                <% if (recipe.matchedItems && recipe.matchedItems.length > 0) { %>
+                  <div style="margin-bottom:0.5rem;">
+                    <% recipe.matchedItems.forEach(function(item) { %>
+                      <span style="display:inline-block; border-radius:20px; font-size:0.72rem; padding:2px 8px; margin:2px 2px 0 0; font-weight:500;
+                        background:<%= item.status === 'expiring' ? '#FEF3E2' : '#EAF4EB' %>;
+                        color:<%= item.status === 'expiring' ? '#B7600A' : 'var(--green-add)' %>;
+                        border: 1px solid <%= item.status === 'expiring' ? '#F9D89A' : '#A8D5AB' %>;">
+                        <%= item.name %>
+                      </span>
+                    <% }) %>
+                  </div>
+                <% } %>
+                <button class="btn-learn-more" data-recipe-index="<%= idx %>">See recipe</button>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+
+    <% } %>
+
+  </div><!-- .page-wrapper -->
+
+  <!-- Recipe Detail Modal -->
+  <div class="modal fade" id="recipeModal" tabindex="-1" aria-labelledby="recipeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content" style="border-radius:14px; background:var(--bg-cream);">
+        <div class="modal-header" style="border-bottom: 1px solid var(--border-gray);">
+          <div>
+            <span id="modalCategory" style="font-size:0.72rem; background:var(--light-gray); color:#666; border-radius:4px; padding:2px 8px; text-transform:capitalize; display:inline-block; margin-bottom:4px;"></span>
+            <h5 class="modal-title" id="recipeModalLabel" style="margin:0; font-size:1.15rem; font-weight:700;"></h5>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p id="modalDescription" style="color:#555; font-size:0.9rem; margin-bottom:1rem;"></p>
+          <div id="modalMatchedItems" style="margin-bottom:1rem;"></div>
+          <h6 style="font-weight:700; margin-bottom:0.5rem;">Ingredients</h6>
+          <ul id="modalIngredients" style="padding-left:1.2rem; margin-bottom:1.2rem; font-size:0.9rem; color:#333;"></ul>
+          <h6 style="font-weight:700; margin-bottom:0.5rem;">Steps</h6>
+          <ol id="modalSteps" style="padding-left:1.2rem; font-size:0.9rem; color:#333; line-height:1.8;"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Embed recipe data for JS -->
+  <script>
+    var likedRecipesData = <%- JSON.stringify(recipes) %>;
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

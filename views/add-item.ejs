@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KitchenSync - Add New Item</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+
+  <div class="page-wrapper">
+
+    <div class="inner-header">
+      <a href="<%= back || '/dashboard' %>" class="back-link"><i class="bi bi-arrow-left"></i> Back</a>
+      <span></span>
+      <a href="/dashboard" class="home-link"><i class="bi bi-house-fill"></i></a>
+    </div>
+
+    <div class="add-item-page">
+      <h3>Add New</h3>
+
+      <% if (error) { %>
+        <div class="alert-msg alert-error"><%= error %></div>
+      <% } %>
+
+      <!-- Form POSTs to /items on the server -->
+      <form id="addItemForm" action="/items" method="POST">
+
+        <div class="image-placeholder">
+          <i class="bi bi-image"></i>
+        </div>
+
+        <label for="itemName">Item Name</label>
+        <input type="text" class="form-control" id="itemName" name="itemName"
+          placeholder="Enter item name" required>
+
+        <label>Quantity</label>
+        <div class="quantity-control">
+          <button type="button" class="quantity-btn" id="quantityMinus">&minus;</button>
+          <input type="text" class="quantity-value" id="quantityValue" name="quantity" value="1" readonly>
+          <button type="button" class="quantity-btn plus" id="quantityPlus">+</button>
+        </div>
+
+        <% if (!storage) { %>
+        <div class="assign-options">
+          <span>Assign to</span>
+          <button type="button" class="assign-btn">Pantry</button>
+          <button type="button" class="assign-btn">Fridge</button>
+          <button type="button" class="assign-btn">Freezer</button>
+          <% customStorages.forEach(function(s) { %>
+            <button type="button" class="assign-btn"><%= s.name %></button>
+          <% }) %>
+        </div>
+        <% } %>
+        <!-- Hidden input that JS keeps in sync with the active assign-btn (or pre-set from storage page) -->
+        <input type="hidden" id="storageValue" name="storage" value="<%= storage || '' %>">
+        <input type="hidden" name="back" value="<%= back || '' %>">
+
+        <label for="expiryDate">Expiration Date <span style="font-weight:400; color:#888; font-size:0.85em;">(optional)</span></label>
+        <input type="date" class="form-control date-empty" id="expiryDate" name="expiryDate">
+
+        <button type="submit" class="btn-add-item">Add item</button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

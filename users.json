@@ -1,0 +1,26 @@
+[
+  {
+    "id": "user_1",
+    "username": "Zifran",
+    "email": "test@test.com",
+    "password": "password123"
+  },
+  {
+    "id": "user_2",
+    "username": "Deran",
+    "email": "cross@test.com",
+    "password": "password123"
+  },
+  {
+    "id": "user_3",
+    "username": "Emmanuel",
+    "email": "dairo@test.com",
+    "password": "password123"
+  },
+  {
+    "id": "user_4",
+    "username": "Ikechukwu",
+    "email": "henry@test.com",
+    "password": "password123"
+  }
+]

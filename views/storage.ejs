@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KitchenSync - <%= storage.name %></title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+
+  <div class="page-wrapper">
+
+    <div class="inner-header">
+      <a href="/dashboard" class="back-link"><i class="bi bi-arrow-left"></i> Back</a>
+      <span class="inner-title"><%= storage.name %></span>
+      <a href="/dashboard" class="home-link"><i class="bi bi-house-fill"></i></a>
+    </div>
+
+    <div style="position: relative; margin-bottom: 1rem;">
+      <form action="/storages/<%= storage._id %>?_method=DELETE" method="POST"
+        onsubmit="return confirm('Delete <%= storage.name %> and all its items?')"
+        style="position: absolute; left: 3rem; top: 50%; transform: translateY(-50%); z-index: 1;">
+        <button type="submit" class="storage-page-delete-btn">
+          <i class="bi bi-trash"></i> Delete Storage
+        </button>
+      </form>
+      <div class="search-bar" style="justify-content: flex-end; margin-bottom: 0;">
+        <div class="search-input-wrapper" style="width: 260px;">
+          <input type="text" placeholder="Search items..." class="page-search-input"
+            data-target="#storageItems"
+            style="width:100%; padding:0.7rem 2.5rem 0.7rem 1rem; border:1px solid var(--border-gray); border-radius:8px; font-size:0.9rem; background-color:var(--white);">
+          <span class="search-icon-inside"><i class="bi bi-search"></i></span>
+        </div>
+        <a href="/add-item?storage=<%= encodeURIComponent(storage.name) %>&back=/storage/<%= storage._id %>" class="add-item-btn"><i class="bi bi-plus-lg"></i></a>
+      </div>
+    </div>
+
+    <div id="storageItems">
+      <% if (items.length === 0) { %>
+        <div class="empty-state">
+          <i class="bi bi-box-seam" style="font-size:3rem; margin-bottom:0.5rem;"></i>
+          <p>No items in <%= storage.name %> yet.</p>
+          <a href="/add-item?storage=<%= encodeURIComponent(storage.name) %>&back=/storage/<%= storage._id %>" style="color: var(--blue-link);">Add your first item</a>
+        </div>
+      <% } else { %>
+        <div class="items-grid">
+          <% items.forEach(function(item) { %>
+            <div class="item-card searchable-item <%= item.borderClass %>">
+              <div class="item-image">
+                <i class="bi bi-image" style="font-size:1.5rem; color:#CCC;"></i>
+              </div>
+              <div class="item-info">
+                <div class="item-name"><%= item.name %></div>
+                <div class="item-meta">Qty: <%= item.quantity %><% if (item.expiryFormatted) { %> · Exp: <%= item.expiryFormatted %><% } %></div>
+              </div>
+              <a href="/items/<%= item._id %>/edit" class="edit-btn" title="Edit item">
+                <i class="bi bi-pencil"></i>
+              </a>
+              <form action="/items/<%= item._id %>?_method=DELETE" method="POST">
+                <button type="submit" class="delete-btn" title="Delete item"
+                  onclick="return confirm('Delete <%= item.name %>?')">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </form>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
