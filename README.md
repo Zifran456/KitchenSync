@@ -198,29 +198,25 @@ GET /auth/logout ──> /login
 
 ### Working
 - User registration and login (stored in users.json)
-- Session-based authentication — all routes protected
 - Add, edit, and delete food items with name, quantity, storage, and expiry date
 - Dashboard overview stats (Total Items, Expired, Expiring Soon, Low Stock)
 - Filter tabs (All / Expired / Expiring Soon / Low Stock)
 - Built-in storage pages (Fridge, Freezer, Pantry) with expiry colour coding
 - Custom storages — create and name your own storage locations, delete with all their items
-- Item status calculated server-side based on expiry date:
+- Item status based on expiry date:
   - **Expired** — past expiry date (red left border)
   - **Expiring Soon** — within 7 days (orange left border)
   - **Good** — more than 7 days out (green left border)
 - Low Stock — items with quantity ≤ 2
-- Recipe suggestions on dashboard (top 3, scored by expiring items first)
+- Recipe suggestions on dashboard 
 - Full recipe page — browse all suggested recipes with matched ingredient chips
 - Recipe detail modal — view full ingredients list and step-by-step instructions
-- Like / unlike recipes (live, no page reload)
+- Like / unlike recipes 
 - Liked recipes page — view and manage all saved recipes
-- Back navigation is context-aware — Save and Back always return to the page you came from
+- Back navigation is context-aware — Add Item and Back always return to the page you came from
 - Search filtering on all storage and recipe pages
 - Responsive layout (mobile, tablet, desktop)
 - Sign out
 
 ### Not Yet Implemented
 - Password hashing (passwords currently stored as plain text in users.json)
-- "Forgot your password?" link (no reset flow)
-- Food item images (placeholder icons only)
-- Recipe creation or editing via the UI (recipes are seeded from seed-recipes.js only)
