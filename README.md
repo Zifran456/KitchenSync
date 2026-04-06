@@ -80,7 +80,7 @@ Create a `.env` file inside the `app/` folder:
 ```
 PORT=3000
 MONGODB_URI=mongodb://localhost:27017/kitchensync
-SESSION_SECRET=kitchensync-super-secret-key-change-in-production
+SESSION_SECRET=your-own-secret-string-here
 ```
 
 ### Seeding Recipe Data
@@ -219,4 +219,6 @@ GET /auth/logout ──> /login
 - Sign out
 
 ### Not Yet Implemented
-- Password hashing (passwords currently stored as plain text in users.json)
+- "Forgot your password?" link (no reset flow)
+- Food item images (placeholder icons only)
+- Recipe creation or editing via the UI (recipes are seeded from seed-recipes.js only)
