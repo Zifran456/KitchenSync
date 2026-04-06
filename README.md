@@ -4,7 +4,7 @@
 
 # Group I - KitchenSync
 
-This repository contains all documents and source code for the ENSE 281 Group Project by Group I.
+Welcome to the repository for the ENSE 281 Group Project done by Group I.
 
 ## Project Introduction & Background 📝
 
