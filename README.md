@@ -8,7 +8,7 @@ This repository contains all documents and source code for the ENSE 281 Group Pr
 
 ## Project Introduction & Background 📝
 
-This web application aims to reduce household food waste and aid in decision making by creating a system that provides its users with various recipes and the tools to track food inventory whilst simultanaously allowing them to track food expiration dates.
+This web application aims to reduce household food waste and aid in decision making by creating a system that provides its users with various recipes and the tools to track food inventory whilst simultaneously allowing them to track food expiration dates.
 
 ## Business Opportunity 📍
 
@@ -18,7 +18,7 @@ The project will allow users to keep track of their food inventory and give user
 
 This web application will allow for:
 * Users to input any food items into any designated storages
-* Users to rack expiry dates on their food items
+* Users to track expiry dates on their food items
 * Users to receive recipe suggestions based on food items stored and/or items nearing expiry date
 * Users to browse and save recipes
 
@@ -75,12 +75,20 @@ Open `http://localhost:3000` in your browser.
 
 ### Environment Variables
 
-Create a `.env` file in the project root:
+Create a `.env` file inside the `app/` folder:
 
 ```
 PORT=3000
 MONGODB_URI=mongodb://localhost:27017/kitchensync
 SESSION_SECRET=kitchensync-super-secret-key-change-in-production
+```
+
+### Seeding Recipe Data
+
+To populate the database with recipes (run once after setup):
+
+```bash
+node seed-recipes.js
 ```
 
 ---
@@ -93,7 +101,7 @@ SESSION_SECRET=kitchensync-super-secret-key-change-in-production
 | Framework | Express 4 |
 | Templating | EJS |
 | Database | MongoDB + Mongoose |
-| Auth | express-session |
+| Auth | express-session + users.json |
 | Frontend CSS | Bootstrap 5.3.3 + custom style.css |
 | Frontend JS | Vanilla JavaScript |
 | Icons | Bootstrap Icons 1.11.3 |
@@ -103,44 +111,52 @@ SESSION_SECRET=kitchensync-super-secret-key-change-in-production
 ## File Structure
 
 ```
-kitchensync/
+app/
 ├── server.js                 <-- Express entry point
 ├── package.json
 ├── .env                      <-- Environment variables (not committed)
+├── .gitignore
+├── users.json                <-- User accounts (plain JSON)
+├── seed-recipes.js           <-- Script to seed recipe data into MongoDB
 │
 ├── models/
-│   ├── User.js               <-- Mongoose User model (username, email, hashed password)
-│   ├── Item.js               <-- Mongoose Item model (name, qty, storage, expiryDate, userId)
-│   └── Storage.js            <-- Mongoose Storage model (name, userId) — custom storages only
+│   ├── User.js               <-- Mongoose User model (defined, not yet used for auth)
+│   ├── Item.js               <-- Item model with status virtual (expired/expiring/good)
+│   ├── Storage.js            <-- Custom storage model (name, userId)
+│   ├── Recipe.js             <-- Recipe model (name, keywords, ingredients, steps)
+│   └── LikedRecipe.js        <-- Liked recipe model (userId + recipeId, unique pair)
 │
 ├── routes/
-│   ├── auth.js               <-- POST /auth/login, POST /auth/register, GET /auth/logout
-│   ├── items.js              <-- POST /items, GET /items/:id/edit, PUT /items/:id, DELETE /items/:id
+│   ├── auth.js               <-- POST /auth/register, POST /auth/login, GET /auth/logout
+│   ├── items.js              <-- POST /items, GET+PUT /items/:id/edit, DELETE /items/:id
 │   ├── storages.js           <-- POST /storages, DELETE /storages/:id
-│   └── pages.js              <-- GET routes for all pages (dashboard, storage pages, add/edit forms)
+│   ├── pages.js              <-- GET routes for all pages + recipe suggestion logic
+│   └── recipes.js            <-- POST /recipes/:id/like, DELETE /recipes/:id/like
 │
 ├── middleware/
-│   └── requireAuth.js        <-- Session guard — redirects to /login if unauthenticated
+│   └── requireAuth.js        <-- Session guard — redirects to /login if not authenticated
 │
-├── views/                    <-- EJS templates (one per page)
-│   ├── index.ejs
+├── views/                    <-- EJS templates
+│   ├── index.ejs             <-- Welcome / landing page
 │   ├── login.ejs
 │   ├── register.ejs
-│   ├── dashboard.ejs
+│   ├── dashboard.ejs         <-- Stats, filter tabs, recipe suggestions, storage grid
 │   ├── add-item.ejs
-│   ├── edit-item.ejs         <-- Pre-filled edit form for existing items
-│   ├── storage.ejs           <-- Generic page for custom (user-created) storages
+│   ├── edit-item.ejs
 │   ├── fridge.ejs
 │   ├── freezer.ejs
 │   ├── pantry.ejs
-│   ├── recipes.ejs
-│   └── liked-recipes.ejs
+│   ├── storage.ejs           <-- Generic page for custom storages
+│   ├── recipes.ejs           <-- Recipe suggestions with like button and detail modal
+│   └── liked-recipes.ejs     <-- Saved recipes with unlike button
 │
 ├── public/                   <-- Static assets served by Express
 │   ├── css/style.css
 │   └── js/app.js
 │
-└── css/ & js/                <-- Legacy static HTML assets (kept for reference)
+├── css/ & js/                <-- Legacy static HTML assets (not served by Express)
+│
+└── [legacy .html files]      <-- Old prototypes, not used by the Express app
 ```
 
 ---
@@ -150,8 +166,8 @@ kitchensync/
 ```
 / (Welcome)
   └──> /login
-         ├──> /register ──> /login
-         └──> /dashboard
+         ├──> /register ──POST /auth/register──> /login
+         └──> /dashboard ──POST /auth/login
                 │
                 ├──> /add-item?storage=X&back=Y ──POST /items──> Y (or /dashboard)
                 │
@@ -166,7 +182,14 @@ kitchensync/
                 │      └──> DELETE /storages/:id ──> /dashboard
                 │
                 ├──> /recipes
+                │      ├──> Like button ──POST /recipes/:id/like──> (no reload, fetch API)
+                │      └──> Recipe detail modal (ingredients + steps)
+                │
                 └──> /liked-recipes
+                       ├──> Unlike button ──DELETE /recipes/:id/like──> (no reload)
+                       └──> Recipe detail modal
+
+GET /auth/logout ──> /login
 ```
 
 ---
@@ -174,18 +197,30 @@ kitchensync/
 ## Features
 
 ### Working
-- User registration and login
+- User registration and login (stored in users.json)
+- Session-based authentication — all routes protected
 - Add, edit, and delete food items with name, quantity, storage, and expiry date
 - Dashboard overview stats (Total Items, Expired, Expiring Soon, Low Stock)
 - Filter tabs (All / Expired / Expiring Soon / Low Stock)
 - Built-in storage pages (Fridge, Freezer, Pantry) with expiry colour coding
-- Custom storages — create and name your own storage locations
-- Item status based on expiry date:
+- Custom storages — create and name your own storage locations, delete with all their items
+- Item status calculated server-side based on expiry date:
   - **Expired** — past expiry date (red left border)
   - **Expiring Soon** — within 7 days (orange left border)
   - **Good** — more than 7 days out (green left border)
 - Low Stock — items with quantity ≤ 2
-- Back navigation
-- Search filtering on all storage pages
+- Recipe suggestions on dashboard (top 3, scored by expiring items first)
+- Full recipe page — browse all suggested recipes with matched ingredient chips
+- Recipe detail modal — view full ingredients list and step-by-step instructions
+- Like / unlike recipes (live, no page reload)
+- Liked recipes page — view and manage all saved recipes
+- Back navigation is context-aware — Save and Back always return to the page you came from
+- Search filtering on all storage and recipe pages
 - Responsive layout (mobile, tablet, desktop)
 - Sign out
+
+### Not Yet Implemented
+- Password hashing (passwords currently stored as plain text in users.json)
+- "Forgot your password?" link (no reset flow)
+- Food item images (placeholder icons only)
+- Recipe creation or editing via the UI (recipes are seeded from seed-recipes.js only)
