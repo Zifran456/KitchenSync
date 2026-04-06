@@ -49,47 +49,62 @@ Our main audience includes:
 
 ## Project Status 🟢
 
-MVP complete. Backend integrated with Express, MongoDB, and EJS views.
+MVP complete. Backend integrated with Express, MongoDB Atlas, and EJS views.
 
 ---
 
-## How to Run
+## Developer Setup
 
 > **Requires:** Node.js and a MongoDB instance (local or Atlas).
 
+### First Time Only
+
+**1. Clone the repo and switch to the dev branch:**
 ```bash
-# Move into the app folder first
-cd app
-
-# Install dependencies (first time only)
-npm install
-
-# Development (auto-restarts on file changes)
-npm run dev
-
-# Production
-npm start
+git clone https://github.com/D-C04/Group_I.git
+cd Group_I
+git checkout dev
 ```
 
-Open `http://localhost:3000` in your browser.
+**2. Go into the app folder and install dependencies:**
+```bash
+cd app
+npm install
+```
 
-### Environment Variables
-
-Create a `.env` file inside the `app/` folder:
-
+**3. Create a `.env` file** inside the `app/` folder:
 ```
 PORT=3000
 MONGODB_URI=mongodb://localhost:27017/kitchensync
 SESSION_SECRET=your-own-secret-string-here
 ```
+> Contact a teammate if you need the shared Atlas connection string instead of running MongoDB locally.
 
-### Seeding Recipe Data
-
-To populate the database with recipes (run once after setup):
-
+**4. Seed the recipe data** (only needs to be done once per database):
 ```bash
 node seed-recipes.js
 ```
+
+**5. Start the app:**
+```bash
+npm start
+```
+
+**6. Open your browser** and go to `http://localhost:3000`
+
+Register a new account to get started.
+
+---
+
+### Every Session After That
+
+```bash
+git checkout dev
+git pull origin dev
+npm start
+```
+
+Then open `http://localhost:3000`.
 
 ---
 
@@ -100,8 +115,8 @@ node seed-recipes.js
 | Runtime | Node.js |
 | Framework | Express 4 |
 | Templating | EJS |
-| Database | MongoDB + Mongoose |
-| Auth | express-session + users.json |
+| Database | MongoDB Atlas + Mongoose |
+| Auth | express-session + bcrypt password hashing |
 | Frontend CSS | Bootstrap 5.3.3 + custom style.css |
 | Frontend JS | Vanilla JavaScript |
 | Icons | Bootstrap Icons 1.11.3 |
@@ -116,11 +131,10 @@ app/
 ├── package.json
 ├── .env                      <-- Environment variables (not committed)
 ├── .gitignore
-├── users.json                <-- User accounts (plain JSON)
-├── seed-recipes.js           <-- Script to seed recipe data into MongoDB
+├── seed-recipes.js           <-- Script to seed recipe data into MongoDB (run once)
 │
 ├── models/
-│   ├── User.js               <-- Mongoose User model (defined, not yet used for auth)
+│   ├── User.js               <-- Mongoose User model with bcrypt password hashing
 │   ├── Item.js               <-- Item model with status virtual (expired/expiring/good)
 │   ├── Storage.js            <-- Custom storage model (name, userId)
 │   ├── Recipe.js             <-- Recipe model (name, keywords, ingredients, steps)
@@ -197,21 +211,22 @@ GET /auth/logout ──> /login
 ## Features
 
 ### Working
-- User registration and login (stored in users.json)
+- User registration and login with bcrypt password hashing (stored in MongoDB)
+- Session-based authentication — all routes protected
 - Add, edit, and delete food items with name, quantity, storage, and expiry date
 - Dashboard overview stats (Total Items, Expired, Expiring Soon, Low Stock)
 - Filter tabs (All / Expired / Expiring Soon / Low Stock)
 - Built-in storage pages (Fridge, Freezer, Pantry) with expiry colour coding
 - Custom storages — create and name your own storage locations, delete with all their items
-- Item status based on expiry date:
+- Item status calculated server-side based on expiry date:
   - **Expired** — past expiry date (red left border)
   - **Expiring Soon** — within 7 days (orange left border)
   - **Good** — more than 7 days out (green left border)
 - Low Stock — items with quantity ≤ 2
-- Recipe suggestions on dashboard 
+- Recipe suggestions on dashboard (top 3, scored by expiring items first)
 - Full recipe page — browse all suggested recipes with matched ingredient chips
 - Recipe detail modal — view full ingredients list and step-by-step instructions
-- Like / unlike recipes 
+- Like / unlike recipes (live, no page reload)
 - Liked recipes page — view and manage all saved recipes
 - Back navigation is context-aware — Add Item and Back always return to the page you came from
 - Search filtering on all storage and recipe pages
