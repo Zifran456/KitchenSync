@@ -15,13 +15,10 @@ function writeUsers(users) {
 
 // POST /auth/register
 router.post('/register', (req, res) => {
-  const { username, email, password, confirmPassword } = req.body;
+  const { username, email, password } = req.body;
 
   if (!username || !email || !password) {
     return res.render('register', { error: 'All fields are required.' });
-  }
-  if (password !== confirmPassword) {
-    return res.render('register', { error: 'Passwords do not match.' });
   }
 
   const users = readUsers();
