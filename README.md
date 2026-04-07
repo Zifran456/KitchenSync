@@ -49,7 +49,7 @@ Our main audience includes:
 
 ## Project Status 🟢
 
-MVP complete. Backend integrated with Express, MongoDB Atlas, and EJS views.
+MVP complete. Backend integrated with Express, MongoDB Atlas, and EJS views. Expiry notifications and storage padding improvements added.
 
 ---
 
@@ -99,7 +99,7 @@ app/
 │   ├── index.ejs             <-- Welcome / landing page
 │   ├── login.ejs
 │   ├── register.ejs
-│   ├── dashboard.ejs         <-- Stats, filter tabs, recipe suggestions, storage grid
+│   ├── dashboard.ejs         <-- Stats, filter tabs, notification bell, recipe suggestions, storage grid
 │   ├── add-item.ejs
 │   ├── edit-item.ejs
 │   ├── fridge.ejs
@@ -127,6 +127,8 @@ app/
   └──> /login
          ├──> /register ──POST /auth/register──> /login
          └──> /dashboard ──POST /auth/login
+                │
+                ├──> Notification bell (top nav) ──> dropdown panel listing expiring/expired items
                 │
                 ├──> /add-item?storage=X&back=Y ──POST /items──> Y (or /dashboard)
                 │
@@ -158,7 +160,7 @@ GET /auth/logout ──> /login
 ### Working
 - User registration and login with bcrypt password hashing (stored in MongoDB)
 - Session-based authentication — all routes protected
-- Add, edit, and delete food items with name, quantity, storage, and expiry date
+- Add, edit, and delete food items with name, quantity, storage, and optional expiry date
 - Dashboard overview stats (Total Items, Expired, Expiring Soon, Low Stock)
 - Filter tabs (All / Expired / Expiring Soon / Low Stock)
 - Built-in storage pages (Fridge, Freezer, Pantry) with expiry colour coding
@@ -166,8 +168,11 @@ GET /auth/logout ──> /login
 - Item status calculated server-side based on expiry date:
   - **Expired** — past expiry date (red left border)
   - **Expiring Soon** — within 7 days (orange left border)
-  - **Good** — more than 7 days out (green left border)
+  - **Good** — more than 7 days out, or no expiry date set (green left border)
 - Low Stock — items with quantity ≤ 2
+- In-app notification bell (top nav) — shows a count badge and dropdown listing:
+  - Expiring items: "Your [Item] is expiring soon — see recipe suggestions"
+  - Expired items: "Your [Item] has expired — consider removing them"
 - Recipe suggestions on dashboard (top 3, scored by expiring items first)
 - Full recipe page — browse all suggested recipes with matched ingredient chips
 - Recipe detail modal — view full ingredients list and step-by-step instructions
@@ -179,4 +184,5 @@ GET /auth/logout ──> /login
 - Sign out
 
 ### Not Yet Implemented
+- User authentication (out of scope for current phase)
 - Food item images (placeholder icons only)
