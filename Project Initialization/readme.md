@@ -1,4 +1,4 @@
-# Project Pitch and Initialization Stage
+# Project Initialization 
 This folder contains all the documents required for the first stage.
 The files present are:
 
