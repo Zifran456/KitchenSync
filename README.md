@@ -50,7 +50,7 @@ Our main audience includes:
 
 ## Project Status 🟢
 
-MVP complete. Backend integrated with Express, MongoDB Atlas, and EJS views. Expiry notifications and storage padding improvements added.
+MVP complete. Backend integrated with Express, MongoDB Atlas, and EJS views.
 
 ---
 
@@ -187,3 +187,4 @@ GET /auth/logout ──> /login
 ### Not Yet Implemented
 - User authentication 
 - Food item images (placeholder icons only)
+- Editing profile/deleting user account
