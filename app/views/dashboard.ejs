@@ -28,6 +28,37 @@
         <a href="/liked-recipes" class="icon-btn" title="Liked Recipes">
           <i class="bi bi-suit-heart-fill"></i>
         </a>
+
+        <!-- NOTIFICATION BELL -->
+        <div class="notif-wrapper">
+          <button class="icon-btn notif-bell-btn" id="notifBell" title="Notifications" type="button">
+            <i class="bi bi-bell-fill" style="color:#2C2C2C;"></i>
+            <% var notifTotal = expiring.length + expired.length; %>
+            <% if (notifTotal > 0) { %>
+              <span class="notif-count"><%= notifTotal %></span>
+            <% } %>
+          </button>
+          <div class="notif-panel" id="notifPanel">
+            <div class="notif-panel-header">Notifications</div>
+            <% if (notifTotal === 0) { %>
+              <div class="notif-empty">You're all caught up in your kitchen!</div>
+            <% } else { %>
+              <% expiring.forEach(function(item) { %>
+                <div class="notif-item notif-item-orange">
+                  <i class="bi bi-clock-history"></i>
+                  <span>Your <strong><%= item.name %></strong> is expiring soon — <a href="/recipes">see recipe suggestions</a></span>
+                </div>
+              <% }) %>
+              <% expired.forEach(function(item) { %>
+                <div class="notif-item notif-item-red">
+                  <i class="bi bi-exclamation-circle-fill"></i>
+                  <span>Your <strong><%= item.name %></strong> has expired — consider removing them</span>
+                </div>
+              <% }) %>
+            <% } %>
+          </div>
+        </div>
+
         <a href="/auth/logout" class="icon-btn" title="Sign Out">
           <i class="bi bi-box-arrow-right"></i>
         </a>
@@ -106,12 +137,6 @@
             </div>
           <% }) %>
         </div>
-        <% if (expired.length > 0) { %>
-          <div style="margin-top:1rem; padding:0.75rem 1rem; background:#FDE8E8; border:1px solid #F5C2C2; border-radius:8px; color:#B91C1C; font-size:0.875rem;">
-            <i class="bi bi-exclamation-triangle-fill" style="margin-right:0.4rem;"></i>
-            <strong>Some items in your storage have expired</strong> — consider throwing them away.
-          </div>
-        <% } %>
       <% } %>
     </div>
 

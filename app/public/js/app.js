@@ -169,7 +169,26 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // ============================================
-  // 7. LIKE / UNLIKE RECIPES (fetch, no page reload)
+  // 7. NOTIFICATION BELL toggle
+  // ============================================
+  var notifBell  = document.getElementById('notifBell');
+  var notifPanel = document.getElementById('notifPanel');
+
+  if (notifBell && notifPanel) {
+    notifBell.addEventListener('click', function (e) {
+      e.stopPropagation();
+      notifPanel.classList.toggle('open');
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!notifPanel.contains(e.target) && e.target !== notifBell) {
+        notifPanel.classList.remove('open');
+      }
+    });
+  }
+
+  // ============================================
+  // 8. LIKE / UNLIKE RECIPES (fetch, no page reload)
   // ============================================
   var likeBtns = document.querySelectorAll('.like-btn');
 
