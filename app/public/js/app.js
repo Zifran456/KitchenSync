@@ -118,7 +118,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!recipe) return;
 
         document.getElementById('recipeModalLabel').textContent  = recipe.name;
-        document.getElementById('modalCategory').textContent     = recipe.category;
         document.getElementById('modalDescription').textContent  = recipe.description;
 
         // Matched items chips
