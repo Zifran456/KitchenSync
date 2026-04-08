@@ -391,6 +391,263 @@ const recipes = [
       'Combine all ingredients in a bowl or zip-lock bag.',
       'Mix well. Snack away. Store in an airtight container.'
     ]
+  },
+  {
+    name: 'Shakshuka',
+    description: 'Eggs poached directly in spiced tomato sauce — a one-pan wonder.',
+    keywords: ['egg', 'canned tomato', 'tomato', 'olive oil', 'pasta sauce'],
+    ingredients: ['4 eggs', '1 can canned tomatoes', '1 tbsp olive oil', 'cumin, paprika, salt and pepper', 'parsley or cilantro to garnish (optional)'],
+    steps: [
+      'Heat olive oil in a wide skillet over medium heat.',
+      'Add canned tomatoes and season with cumin, paprika, salt, and pepper.',
+      'Simmer the sauce for 5–7 minutes until slightly thickened.',
+      'Make 4 small wells in the sauce and crack an egg into each.',
+      'Cover and cook 5–7 minutes until whites are set but yolks are still runny.',
+      'Garnish with parsley or cilantro and serve straight from the pan with bread.'
+    ]
+  },
+  {
+    name: 'Quinoa Veggie Bowl',
+    description: 'Hearty grain bowl with whatever greens and toppings you have on hand.',
+    keywords: ['quinoa', 'spinach', 'egg', 'olive oil', 'broth'],
+    ingredients: ['1 cup quinoa', '2 cups broth or water', '1–2 cups spinach', '1–2 eggs (fried or poached)', '1 tbsp olive oil', 'salt and pepper'],
+    steps: [
+      'Rinse quinoa and cook in broth according to package directions (about 15 minutes).',
+      'While quinoa cooks, wilt spinach in a pan with a little olive oil.',
+      'Fry or poach eggs to your liking.',
+      'Assemble bowl: quinoa base, wilted spinach, egg on top.',
+      'Season with salt and pepper. Drizzle with olive oil.'
+    ]
+  },
+  {
+    name: 'BLT Sandwich',
+    description: 'Bacon, crispy and stacked — a sandwich that never needs an introduction.',
+    keywords: ['bacon', 'bread', 'mayo', 'mayonnaise', 'ketchup', 'bagel'],
+    ingredients: ['4 strips bacon', '2 slices bread or a bagel', '1–2 tbsp mayonnaise', 'ketchup (optional)', 'salt and pepper'],
+    steps: [
+      'Cook bacon in a skillet over medium heat until crispy. Drain on paper towel.',
+      'Toast the bread or bagel.',
+      'Spread mayonnaise on one side, ketchup on the other if using.',
+      'Layer bacon onto the bread.',
+      'Season with salt and pepper. Close the sandwich and serve.'
+    ]
+  },
+  {
+    name: 'Split Pea Soup',
+    description: 'Thick, warming soup from pantry staples — practically makes itself.',
+    keywords: ['split pea', 'broth', 'olive oil'],
+    ingredients: ['1 cup dried split peas', '4 cups chicken or veggie broth', '1 tbsp olive oil', 'salt, pepper, cumin to taste'],
+    steps: [
+      'Rinse split peas and add to a pot with broth.',
+      'Bring to a boil, then reduce heat and simmer 35–40 minutes until peas are soft.',
+      'Stir occasionally — peas will naturally thicken the soup.',
+      'Drizzle in olive oil and season with salt, pepper, and cumin.',
+      'Serve hot. The soup thickens more as it cools.'
+    ]
+  },
+  {
+    name: 'Herbed Couscous',
+    description: 'Light and fluffy couscous ready in minutes — great as a side or base.',
+    keywords: ['couscous', 'broth', 'olive oil', 'parsley', 'cilantro', 'olive'],
+    ingredients: ['1 cup couscous', '1 cup hot broth or boiling water', '1 tbsp olive oil', 'handful of parsley or cilantro (chopped)', 'olives (optional)', 'salt and pepper'],
+    steps: [
+      'Place couscous in a bowl and pour over hot broth.',
+      'Cover with a plate or wrap and let sit 5 minutes.',
+      'Fluff with a fork and drizzle with olive oil.',
+      'Stir in fresh herbs and olives if using.',
+      'Season with salt and pepper. Serve warm or at room temperature.'
+    ]
+  },
+  {
+    name: 'Ricotta Toast with Berries',
+    description: 'Creamy ricotta on toast with fresh berries and a drizzle of honey.',
+    keywords: ['bread', 'ricotta', 'berry', 'strawberry', 'raspberry', 'honey', 'maple syrup', 'bagel'],
+    ingredients: ['2 slices bread or a bagel', '¼ cup ricotta', 'handful of berries (fresh or thawed)', 'drizzle of honey or maple syrup'],
+    steps: [
+      'Toast the bread or bagel.',
+      'Spread ricotta generously over each slice.',
+      'Top with berries.',
+      'Drizzle with honey or maple syrup. Eat immediately.'
+    ]
+  },
+  {
+    name: 'Tempeh Rice Bowl',
+    description: 'Crispy pan-fried tempeh over rice with wilted greens.',
+    keywords: ['tempeh', 'tofu', 'rice', 'spinach', 'olive oil'],
+    ingredients: ['1 block tempeh (sliced)', '1 cup cooked rice', '1 cup spinach', '1 tbsp olive oil', 'soy sauce, salt and pepper'],
+    steps: [
+      'Slice tempeh into thin strips and season with salt and pepper.',
+      'Heat olive oil in a skillet over medium-high heat.',
+      'Cook tempeh 3–4 minutes per side until golden and crispy.',
+      'In the same pan, wilt spinach for 1–2 minutes.',
+      'Serve tempeh and spinach over rice. Drizzle with soy sauce.'
+    ]
+  },
+  {
+    name: 'Greek Yogurt Breakfast Bowl',
+    description: 'Thick yogurt layered with nuts, seeds, and a drizzle of honey.',
+    keywords: ['yogurt', 'honey', 'maple syrup', 'almond', 'walnut', 'chia', 'flax', 'banana'],
+    ingredients: ['1 cup yogurt (Greek-style)', '1 tbsp honey or maple syrup', 'handful of almonds or walnuts', '1 tsp chia or flax seeds', '½ banana (sliced, optional)'],
+    steps: [
+      'Spoon yogurt into a bowl.',
+      'Top with nuts, seeds, and banana if using.',
+      'Drizzle honey or maple syrup over the top.',
+      'Eat immediately or refrigerate up to an hour.'
+    ]
+  },
+  {
+    name: 'Tuna Pasta',
+    description: 'Canned tuna tossed through pasta with olive oil — quick and filling.',
+    keywords: ['tuna', 'pasta', 'olive oil', 'parmesan', 'olive'],
+    ingredients: ['2 cups dried pasta', '1 can tuna (drained)', '2 tbsp olive oil', 'parmesan to top (optional)', 'olives (optional)', 'salt and pepper'],
+    steps: [
+      'Cook pasta according to package directions. Reserve ¼ cup pasta water.',
+      'Drain pasta and return to the pot.',
+      'Add drained tuna and olive oil. Toss well.',
+      'Add a splash of pasta water if the mixture seems dry.',
+      'Season with salt and pepper. Top with parmesan and olives if using.'
+    ]
+  },
+  {
+    name: 'Black Bean Tacos',
+    description: 'Hearty plant-based tacos — filling, fast, and great with salsa.',
+    keywords: ['black bean', 'bean', 'tortilla', 'salsa', 'cheese', 'sour cream'],
+    ingredients: ['1 can black beans (drained)', '4 flour tortillas', '½ cup shredded cheese', 'salsa', 'sour cream (optional)', 'cumin, salt and pepper'],
+    steps: [
+      'Warm beans in a small saucepan over medium heat. Season with cumin, salt, and pepper.',
+      'Warm tortillas in a dry pan or microwave.',
+      'Fill each tortilla with beans and top with cheese and salsa.',
+      'Add sour cream if you have it. Fold and serve.'
+    ]
+  },
+  {
+    name: 'Stovetop Popcorn',
+    description: 'Homemade popcorn in minutes — better than the bag.',
+    keywords: ['popcorn', 'coconut oil', 'butter'],
+    ingredients: ['¼ cup popcorn kernels', '1 tbsp coconut oil or vegetable oil', 'pinch of salt', '1 tbsp melted butter (optional)'],
+    steps: [
+      'Heat oil in a large pot over medium-high heat.',
+      'Add 2–3 kernels and wait for them to pop — the oil is ready.',
+      'Add the remaining kernels in a single layer and cover with a lid.',
+      'Shake the pot occasionally as kernels pop.',
+      'Once popping slows to every 2–3 seconds, remove from heat.',
+      'Transfer to a bowl, drizzle with butter if using, and season with salt.'
+    ]
+  },
+  {
+    name: 'Coffee Banana Smoothie',
+    description: 'A morning smoothie with a caffeine kick — creamy, quick, and filling.',
+    keywords: ['coffee', 'banana', 'yogurt', 'milk', 'protein powder', 'honey', 'maple syrup'],
+    ingredients: ['½ cup brewed coffee (cooled or cold)', '1 banana', '½ cup yogurt or milk', '1 scoop protein powder (optional)', 'honey or maple syrup to taste'],
+    steps: [
+      'Add all ingredients to a blender.',
+      'Blend on high for 30–60 seconds until smooth.',
+      'Taste and adjust sweetness with honey or maple syrup.',
+      'Serve immediately over ice if preferred.'
+    ]
+  },
+  {
+    name: 'Mango Smoothie Bowl',
+    description: 'Thick blended mango topped with seeds and oats — eat it with a spoon.',
+    keywords: ['mango', 'yogurt', 'banana', 'chia', 'oat', 'honey', 'maple syrup'],
+    ingredients: ['1 cup frozen mango chunks', '½ cup yogurt', '½ banana', 'toppings: 1 tbsp chia seeds, ¼ cup oats, drizzle of honey'],
+    steps: [
+      'Blend frozen mango, yogurt, and banana until thick and smooth.',
+      'Add as little liquid as possible — the bowl should be thick enough to eat with a spoon.',
+      'Pour into a bowl.',
+      'Top with chia seeds, oats, and a drizzle of honey or maple syrup.'
+    ]
+  },
+  {
+    name: 'Egg Drop Soup',
+    description: 'Silky broth with ribbons of egg — ready in under 10 minutes.',
+    keywords: ['egg', 'broth', 'parsley', 'cilantro'],
+    ingredients: ['2 cups chicken or veggie broth', '2 eggs', 'salt and pepper', 'parsley or cilantro to garnish (optional)'],
+    steps: [
+      'Bring broth to a gentle boil in a small pot. Season with salt and pepper.',
+      'Whisk eggs in a small bowl.',
+      'Slowly drizzle the egg into the simmering broth while stirring gently in a circular motion.',
+      'The egg will cook instantly into soft ribbons.',
+      'Serve immediately, garnished with parsley or cilantro.'
+    ]
+  },
+  {
+    name: 'Pork Fried Rice',
+    description: 'Savoury fried rice with pork — a great use of leftover rice and cooked pork.',
+    keywords: ['pork', 'rice', 'egg', 'pea', 'corn', 'butter'],
+    ingredients: ['1 cup cooked pork (sliced or shredded)', '2 cups cooked rice (day-old is best)', '2 eggs', '½ cup frozen peas or corn', '1 tbsp butter or oil', 'soy sauce to taste'],
+    steps: [
+      'Heat butter or oil in a large skillet over high heat.',
+      'Add pork and cook until lightly browned, about 2–3 minutes.',
+      'Add rice and stir-fry for 2 minutes.',
+      'Push everything to one side, crack in eggs, and scramble.',
+      'Mix eggs into the rice and pork. Add peas and corn.',
+      'Stir-fry another 2 minutes. Season with soy sauce.'
+    ]
+  },
+  {
+    name: 'Canned Chicken Rice Bowl',
+    description: 'Simple, protein-rich bowl using pantry staples — ready in 20 minutes.',
+    keywords: ['chicken', 'rice', 'broth', 'olive oil', 'parsley', 'cilantro'],
+    ingredients: ['1 can chicken (drained)', '1 cup cooked rice', '1 tbsp olive oil', '½ cup broth', 'salt and pepper', 'parsley or cilantro to garnish'],
+    steps: [
+      'Warm olive oil in a small pan over medium heat.',
+      'Add drained canned chicken and season with salt and pepper. Stir to heat through.',
+      'Add a splash of broth and let it reduce slightly for about 2 minutes.',
+      'Serve over rice and garnish with herbs.'
+    ]
+  },
+  {
+    name: 'Arugula and Parmesan Salad',
+    description: 'Peppery arugula with shaved parmesan and a simple olive oil dressing.',
+    keywords: ['arugula', 'spinach', 'parmesan', 'olive oil'],
+    ingredients: ['2 cups arugula or mixed greens', '¼ cup shaved or grated parmesan', '2 tbsp olive oil', 'salt and pepper'],
+    steps: [
+      'Place arugula in a bowl.',
+      'Drizzle with olive oil and toss to coat.',
+      'Season with salt and pepper.',
+      'Top with parmesan. Serve immediately.'
+    ]
+  },
+  {
+    name: 'Banana Bread',
+    description: 'Moist, sweet banana bread — the best use for overripe bananas.',
+    keywords: ['banana', 'flour', 'egg', 'butter', 'sugar', 'baking soda', 'honey', 'maple syrup'],
+    ingredients: ['3 ripe bananas', '1½ cups all-purpose flour', '2 eggs', '⅓ cup melted butter', '½ cup sugar or honey', '1 tsp baking soda', 'pinch of salt'],
+    steps: [
+      'Preheat oven to 350°F (175°C). Grease a loaf pan.',
+      'Mash bananas thoroughly in a bowl.',
+      'Mix in melted butter, eggs, and sugar.',
+      'Stir in flour, baking soda, and salt until just combined — do not overmix.',
+      'Pour into the loaf pan and bake 55–65 minutes until a toothpick comes out clean.',
+      'Cool at least 10 minutes before slicing.'
+    ]
+  },
+  {
+    name: 'Overnight Oats',
+    description: 'No-cook oats prepared the night before — grab and go in the morning.',
+    keywords: ['oat', 'milk', 'yogurt', 'berry', 'strawberry', 'raspberry', 'banana', 'honey', 'maple syrup', 'chia'],
+    ingredients: ['½ cup oats', '½ cup milk', '¼ cup yogurt', '1 tsp chia seeds (optional)', 'honey or maple syrup to taste', 'berries or banana to top'],
+    steps: [
+      'Combine oats, milk, yogurt, and chia seeds in a jar or container.',
+      'Stir well and sweeten with honey or maple syrup.',
+      'Cover and refrigerate overnight (or at least 4 hours).',
+      'In the morning, top with berries or banana and eat cold.'
+    ]
+  },
+  {
+    name: 'Pineapple Fried Rice',
+    description: 'Sweet and savoury fried rice with canned pineapple — a fun tropical twist.',
+    keywords: ['rice', 'egg', 'pineapple', 'corn', 'butter'],
+    ingredients: ['2 cups cooked rice (day-old is best)', '2 eggs', '½ cup canned pineapple chunks (drained)', '½ cup corn', '1 tbsp butter or oil', 'soy sauce to taste'],
+    steps: [
+      'Heat butter or oil in a large skillet over high heat.',
+      'Add rice and stir-fry for 2 minutes.',
+      'Push rice to one side, crack in eggs, and scramble.',
+      'Mix eggs into rice. Add pineapple and corn.',
+      'Stir-fry another 2 minutes. Season with soy sauce.',
+      'Serve immediately — the pineapple should be warm but not mushy.'
+    ]
   }
 ];
 
