@@ -18,13 +18,23 @@ app.use(helmet({ contentSecurityPolicy: false }));
 mongoose.connect(MONGODB_URI)
   .then(async () => {
     console.log('MongoDB connected');
-    // Ensure demo account exists
+    const User = require('./models/User');
+
+    // Ensure demo account exists (Render deployment)
     if (process.env.DEMO_EMAIL && process.env.DEMO_PASSWORD) {
-      const User = require('./models/User');
       const existing = await User.findOne({ email: process.env.DEMO_EMAIL });
       if (!existing) {
         await User.create({ username: 'Demo User', email: process.env.DEMO_EMAIL, password: process.env.DEMO_PASSWORD });
         console.log('Demo account created');
+      }
+    }
+
+    // Ensure test account exists for local development
+    if (!process.env.DEMO_EMAIL) {
+      const existing = await User.findOne({ email: 'test@kitchensync.local' });
+      if (!existing) {
+        await User.create({ username: 'Test User', email: 'test@kitchensync.local', password: 'test1234' });
+        console.log('Test account created — email: test@kitchensync.local  password: test1234');
       }
     }
   })
