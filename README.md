@@ -50,7 +50,63 @@ Our main audience includes:
 
 ## Project Status 🟢
 
-MVP complete. Backend integrated with Express, MongoDB Atlas, and EJS views.
+MVP complete. Backend integrated with Express, MongoDB, and EJS views. Recipe and ingredient data powered by the MealDB API. Deployed on Render.
+
+---
+
+## Try the App 🚀
+
+### Live Demo (Render)
+
+The app is deployed and publicly accessible at:
+
+**[https://group-i.onrender.com](https://group-i.onrender.com)**
+
+> The free Render tier spins down after inactivity — the first load may take up to 60 seconds. Click **Try Demo** on the login page for instant access.
+
+---
+
+### Run Locally
+
+**Prerequisites**
+- [Node.js](https://nodejs.org/) (v18 or later)
+- [MongoDB Community Server](https://www.mongodb.com/try/download/community) installed and running
+
+**Steps**
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Zifran456/Group_I.git
+   cd Group_I/app
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Create a `.env` file from the example:
+   ```bash
+   cp .env.example .env
+   ```
+
+4. Make sure MongoDB is running locally:
+   ```bash
+   # macOS/Linux
+   mongod
+
+   # Windows (run in a separate terminal)
+   mongod --dbpath "C:\data\db"
+   ```
+
+5. Start the app:
+   ```bash
+   npm start
+   ```
+
+6. Open your browser and go to `http://localhost:3000`
+
+> Registration is enabled on local — create an account to get started.
 
 ---
 
@@ -61,8 +117,10 @@ MVP complete. Backend integrated with Express, MongoDB Atlas, and EJS views.
 | Runtime | Node.js |
 | Framework | Express 4 |
 | Templating | EJS |
-| Database | MongoDB Atlas + Mongoose |
-| Auth | express-session + bcrypt password hashing |
+| Database | MongoDB Atlas (production) / MongoDB local (development) + Mongoose |
+| Auth | express-session + bcryptjs password hashing |
+| Recipe & Ingredient Data | MealDB API (free public API) |
+| Security | Helmet (HTTP security headers) |
 | Frontend CSS | Bootstrap 5.3.3 + custom style.css |
 | Frontend JS | Vanilla JavaScript |
 | Icons | Bootstrap Icons 1.11.3 |
@@ -73,36 +131,36 @@ MVP complete. Backend integrated with Express, MongoDB Atlas, and EJS views.
 
 ```
 app/
-├── server.js                 <-- Express entry point
+├── server.js                 <-- Express entry point; connects to MongoDB, creates demo account
 ├── package.json
 ├── .env                      <-- Environment variables (not committed)
-├── .gitignore
-├── seed-recipes.js           <-- Script to seed recipe data into MongoDB (run once)
+├── .env.example              <-- Template for local development setup
 │
 ├── models/
 │   ├── User.js               <-- Mongoose User model with bcrypt password hashing
 │   ├── Item.js               <-- Item model with status virtual (expired/expiring/good)
 │   ├── Storage.js            <-- Custom storage model (name, userId)
-│   ├── Recipe.js             <-- Recipe model (name, keywords, ingredients, steps)
-│   └── LikedRecipe.js        <-- Liked recipe model (userId + recipeId, unique pair)
+│   └── LikedRecipe.js        <-- Liked recipe model (userId + MealDB recipeId string, unique pair)
 │
 ├── routes/
-│   ├── auth.js               <-- POST /auth/register, POST /auth/login, GET /auth/logout
+│   ├── auth.js               <-- POST /auth/login, GET /auth/logout, GET /auth/demo, POST /auth/demo/reset
 │   ├── items.js              <-- POST /items, GET+PUT /items/:id/edit, DELETE /items/:id
 │   ├── storages.js           <-- POST /storages, DELETE /storages/:id
-│   ├── pages.js              <-- GET routes for all pages + recipe suggestion logic
+│   ├── pages.js              <-- GET routes for all pages
 │   └── recipes.js            <-- POST /recipes/:id/like, DELETE /recipes/:id/like
+│
+├── utils/
+│   └── mealdb.js             <-- MealDB API wrapper: filterByIngredient, lookupMeal, getSuggestedRecipes; 10-min in-memory cache
 │
 ├── middleware/
 │   └── requireAuth.js        <-- Session guard — redirects to /login if not authenticated
 │
 ├── views/                    <-- EJS templates
 │   ├── index.ejs             <-- Welcome / landing page
-│   ├── login.ejs
-│   ├── register.ejs
-│   ├── dashboard.ejs         <-- Stats, filter tabs, notification bell, recipe suggestions, storage grid
-│   ├── add-item.ejs
-│   ├── edit-item.ejs
+│   ├── login.ejs             <-- Login form with "Try Demo" button
+│   ├── dashboard.ejs         <-- Stats, filter tabs, notification bell, recipe suggestions, storage grid, demo banner
+│   ├── add-item.ejs          <-- Add item form with live ingredient image preview
+│   ├── edit-item.ejs         <-- Edit item form with pre-loaded ingredient image preview
 │   ├── fridge.ejs
 │   ├── freezer.ejs
 │   ├── pantry.ejs
@@ -110,13 +168,9 @@ app/
 │   ├── recipes.ejs           <-- Recipe suggestions with like button and detail modal
 │   └── liked-recipes.ejs     <-- Saved recipes with unlike button
 │
-├── public/                   <-- Static assets served by Express
-│   ├── css/style.css
-│   └── js/app.js
-│
-├── css/ & js/                <-- Legacy static HTML assets (not served by Express)
-│
-└── [legacy .html files]      <-- Old prototypes, not used by the Express app
+└── public/                   <-- Static assets served by Express
+    ├── css/style.css
+    └── js/app.js
 ```
 
 ---
@@ -126,32 +180,36 @@ app/
 ```
 / (Welcome)
   └──> /login
-         ├──> /register ──POST /auth/register──> /login
-         └──> /dashboard ──POST /auth/login
-                │
-                ├──> Notification bell (top nav) ──> dropdown panel listing expiring/expired items
-                │
-                ├──> /add-item?storage=X&back=Y ──POST /items──> Y (or /dashboard)
-                │
-                ├──> /fridge
-                │      ├──> /add-item?storage=Fridge&back=/fridge ──> /fridge
-                │      └──> /items/:id/edit ──PUT /items/:id──> /fridge
-                │
-                ├──> /freezer  (same pattern as /fridge)
-                ├──> /pantry   (same pattern as /fridge)
-                │
-                ├──> /storage/:id  (custom storage — same pattern as built-in pages)
-                │      └──> DELETE /storages/:id ──> /dashboard
-                │
-                ├──> /recipes
-                │      ├──> Like button ──POST /recipes/:id/like──> (no reload, fetch API)
-                │      └──> Recipe detail modal (ingredients + steps)
-                │
-                └──> /liked-recipes
-                       ├──> Unlike button ──DELETE /recipes/:id/like──> (no reload)
-                       └──> Recipe detail modal
+         ├──> POST /auth/login ──> /dashboard
+         └──> "Try Demo" ──GET /auth/demo──> /dashboard  (Render deployment only)
 
-GET /auth/logout ──> /login
+/dashboard
+  ├──> Demo banner (demo accounts only)
+  │      └──> POST /auth/demo/reset ──> /dashboard  (wipes + re-seeds demo data)
+  │
+  ├──> Notification bell (top nav) ──> dropdown panel listing expiring/expired items
+  │
+  ├──> /add-item?storage=X&back=Y ──POST /items──> Y (or /dashboard)
+  │
+  ├──> /fridge
+  │      ├──> /add-item?storage=Fridge&back=/fridge ──> /fridge
+  │      └──> /items/:id/edit ──PUT /items/:id──> /fridge
+  │
+  ├──> /freezer  (same pattern as /fridge)
+  ├──> /pantry   (same pattern as /fridge)
+  │
+  ├──> /storage/:id  (custom storage — same pattern as built-in pages)
+  │      └──> DELETE /storages/:id ──> /dashboard
+  │
+  ├──> /recipes
+  │      ├──> Like button ──POST /recipes/:id/like──> (no reload, fetch API)
+  │      └──> Recipe detail modal (ingredients + steps)
+  │
+  └──> /liked-recipes
+         ├──> Unlike button ──DELETE /recipes/:id/like──> (no reload)
+         └──> Recipe detail modal
+
+GET /auth/logout ──> /
 ```
 
 ---
@@ -159,13 +217,17 @@ GET /auth/logout ──> /login
 ## Features
 
 ### Working
-- User registration and login with bcrypt password hashing (stored in MongoDB)
+- Login with bcrypt password hashing (stored in MongoDB)
+- **Demo mode** — "Try Demo" button on login page for one-click access without registration (Render deployment)
+- **Demo data reset** — banner shown to demo users with a reset button that wipes and re-seeds the account back to a clean default state
 - Session-based authentication — all routes protected
 - Add, edit, and delete food items with name, quantity, storage, and optional expiry date
+- **Live ingredient image preview** on Add Item and Edit Item pages — fetches a thumbnail from MealDB as the user types the item name
 - Dashboard overview stats (Total Items, Expired, Expiring Soon, Low Stock)
 - Filter tabs (All / Expired / Expiring Soon / Low Stock)
 - Built-in storage pages (Fridge, Freezer, Pantry) with expiry colour coding
 - Custom storages — create and name your own storage locations, delete with all their items
+- **Ingredient thumbnail images** on all item cards (Fridge, Freezer, Pantry, custom storages, dashboard) — served from MealDB CDN with graceful fallback icon
 - Item status calculated server-side based on expiry date:
   - **Expired** — past expiry date (red left border)
   - **Expiring Soon** — within 7 days (orange left border)
@@ -174,7 +236,8 @@ GET /auth/logout ──> /login
 - In-app notification bell (top nav) — shows a count badge and dropdown listing:
   - Any items that are expiring soon
   - Any items that have expired
-- Recipe suggestions on dashboard (top 3, scored by expiring items first)
+- **Recipe suggestions powered by MealDB API** — queries live meal data based on items currently in storage; scores meals by how many expiring items they use; results cached in memory for 10 minutes to avoid rate limiting
+- Top 3 recipe suggestions shown on dashboard
 - Full recipe page — browse all suggested recipes with matched ingredient chips
 - Recipe detail modal — view full ingredients list and step-by-step instructions
 - Like / unlike recipes (live, no page reload)
@@ -182,8 +245,19 @@ GET /auth/logout ──> /login
 - Back navigation is context-aware — Add Item and Back always return to the page you came from
 - Search filtering on all storage and recipe pages
 - Responsive layout (mobile, tablet, desktop)
+- **Local hosting** — runs with a local MongoDB instance; see `.env.example`
 - Sign out
 
-### Not Yet Implemented
-- Food item images (placeholder icons only)
-- Editing profile/deleting user account
+### Considerations for Future MVP
+
+**Functionality**
+- Editing profile / deleting user account
+- Push or email notifications for expiring items (currently only visible in-app)
+- Barcode / UPC scanning to add items quickly
+- Manual recipe entry (user-submitted recipes, not just MealDB)
+- Meal planning / weekly planner view
+
+**Other**
+- Item image override — MealDB thumbnails don't always match the item name
+- Sorting and filtering options on storage pages (currently only search)
+- Quantity units (e.g. "500g" vs just "2")
