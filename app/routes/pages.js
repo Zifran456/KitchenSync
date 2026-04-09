@@ -64,9 +64,9 @@ router.get('/login', (req, res) => {
   res.render('login', { error: null, success });
 });
 
-// GET /register
+// GET /register — disabled; redirect to login
 router.get('/register', (req, res) => {
-  res.render('register', { error: null });
+  res.redirect('/login');
 });
 
 // GET /dashboard
@@ -109,6 +109,7 @@ router.get('/dashboard', requireAuth, async (req, res) => {
 
     res.render('dashboard', {
       username:        req.session.username,
+      isDemo:          !!req.session.isDemo,
       totalItems:      allItems.length,
       expiredCount,
       expiringSoonCount,
@@ -124,6 +125,7 @@ router.get('/dashboard', requireAuth, async (req, res) => {
     console.error(err);
     res.render('dashboard', {
       username: req.session.username,
+      isDemo:   !!req.session.isDemo,
       totalItems: 0, expiredCount: 0, expiringSoonCount: 0, lowStockCount: 0,
       allItems: [], expired: [], expiring: [], lowStock: [], customStorages: [], topRecipes: []
     });

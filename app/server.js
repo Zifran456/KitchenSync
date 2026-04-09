@@ -8,14 +8,26 @@ const methodOverride = require('method-override');
 const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT       = process.env.PORT || 3000;
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/kitchensync';
 
 app.set('trust proxy', 1);
 app.use(helmet({ contentSecurityPolicy: false }));
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('MongoDB connected'))
+mongoose.connect(MONGODB_URI)
+  .then(async () => {
+    console.log('MongoDB connected');
+    // Ensure demo account exists
+    if (process.env.DEMO_EMAIL && process.env.DEMO_PASSWORD) {
+      const User = require('./models/User');
+      const existing = await User.findOne({ email: process.env.DEMO_EMAIL });
+      if (!existing) {
+        await User.create({ username: 'Demo User', email: process.env.DEMO_EMAIL, password: process.env.DEMO_PASSWORD });
+        console.log('Demo account created');
+      }
+    }
+  })
   .catch(err => console.error('MongoDB connection error:', err));
 
 // View engine
@@ -37,7 +49,7 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'kitchensync-secret',
   resave: false,
   saveUninitialized: false,
-  store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
+  store: MongoStore.create({ mongoUrl: MONGODB_URI }),
   cookie: {
     maxAge: 1000 * 60 * 60 * 24, // 1 day
     secure: process.env.NODE_ENV === 'production',

@@ -65,6 +65,19 @@
       </div>
     </div>
 
+    <!-- DEMO BANNER -->
+    <% if (isDemo) { %>
+    <div style="background:#FFF8EC; border:1px solid #F9D89A; border-radius:10px; padding:0.65rem 1rem; margin:0.75rem 1.5rem 0; display:flex; align-items:center; justify-content:space-between; gap:0.75rem; font-size:0.82rem; color:#8a5500;">
+      <span><i class="bi bi-info-circle-fill" style="margin-right:0.35rem;"></i>You're on the demo account — data may be shared with other visitors.</span>
+      <form action="/auth/demo/reset" method="POST" style="margin:0; flex-shrink:0;">
+        <button type="submit" onclick="return confirm('Reset demo data to defaults?')"
+          style="background:#D4A843; color:#fff; border:none; border-radius:6px; padding:0.3rem 0.85rem; font-size:0.8rem; font-weight:600; cursor:pointer; white-space:nowrap;">
+          Reset Demo
+        </button>
+      </form>
+    </div>
+    <% } %>
+
     <!-- OVERVIEW CARD -->
     <div class="overview-card">
       <h3>Overview</h3>
