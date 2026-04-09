@@ -41,8 +41,13 @@
       </form>
 
       <div class="create-account-section">
-        <p>Just exploring?</p>
-        <a href="/auth/demo" class="btn-create-account d-block">Try Demo</a>
+        <% if (demoEnabled) { %>
+          <p>Just exploring?</p>
+          <a href="/auth/demo" class="btn-create-account d-block">Try Demo</a>
+        <% } else { %>
+          <p>Don't have an account?</p>
+          <a href="/register" class="btn-create-account d-block">Create an account</a>
+        <% } %>
       </div>
 
     </div>

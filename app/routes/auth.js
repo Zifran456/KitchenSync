@@ -6,9 +6,22 @@ const Storage     = require('../models/Storage');
 const LikedRecipe = require('../models/LikedRecipe');
 const requireAuth = require('../middleware/requireAuth');
 
-// POST /auth/register — disabled; app uses demo account only
-router.post('/register', (req, res) => {
-  res.redirect('/login');
+// POST /auth/register — available on local; disabled on demo/Render deployment
+router.post('/register', async (req, res) => {
+  if (process.env.DEMO_EMAIL) return res.redirect('/login');
+  const { username, email, password } = req.body;
+  if (!username || !email || !password) {
+    return res.render('register', { error: 'All fields are required.' });
+  }
+  try {
+    const existing = await User.findOne({ email });
+    if (existing) return res.render('register', { error: 'An account with that email already exists.' });
+    await User.create({ username, email, password });
+    res.redirect('/login?registered=1');
+  } catch (err) {
+    console.error(err);
+    res.render('register', { error: 'Something went wrong. Please try again.' });
+  }
 });
 
 // GET /auth/demo — one-click login as the demo account

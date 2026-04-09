@@ -27,12 +27,13 @@ router.get('/', (req, res) => {
 // GET /login
 router.get('/login', (req, res) => {
   const success = req.query.registered ? 'Account created! Please sign in.' : null;
-  res.render('login', { error: null, success });
+  res.render('login', { error: null, success, demoEnabled: !!process.env.DEMO_EMAIL });
 });
 
-// GET /register — disabled; redirect to login
+// GET /register — available on local; redirects to login on demo/Render deployment
 router.get('/register', (req, res) => {
-  res.redirect('/login');
+  if (process.env.DEMO_EMAIL) return res.redirect('/login');
+  res.render('register', { error: null });
 });
 
 // GET /dashboard
