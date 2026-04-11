@@ -50,7 +50,7 @@ Our main audience includes:
 
 ## Project Status 🟢
 
-MVP complete. Backend integrated with Express, MongoDB, and EJS views. Recipe and ingredient data powered by the MealDB API. Deployed on Render.
+MVP complete. Backend integrated with Express, MongoDB, and EJS views. Recipe and ingredient data powered by the MealDB API. Deployed via Render and connected to a live MongoDB Atlas cluster.
 
 ---
 
@@ -58,11 +58,9 @@ MVP complete. Backend integrated with Express, MongoDB, and EJS views. Recipe an
 
 ### Live Demo (Render)
 
-The app is deployed and publicly accessible at:
+The live app is linked above (see "About" section) — accessible from desktop or mobile. Click **Try Demo** on the login page for instant access.
 
-**[https://group-i.onrender.com](https://group-i.onrender.com)**
-
-> The free Render tier spins down after inactivity — the first load may take up to 60 seconds. Click **Try Demo** on the login page for instant access.
+> Note: the free Render tier spins down after inactivity — the first load may take up to 30 seconds. 
 
 ---
 
