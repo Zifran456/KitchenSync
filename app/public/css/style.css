@@ -1309,6 +1309,7 @@ input[type="date"].date-empty {
 
 .assign-options {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 1rem;
